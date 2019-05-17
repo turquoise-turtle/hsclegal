@@ -1,0 +1,22 @@
+<style>
+	body {
+		font-family: sans-serif;
+	}
+	
+	.gen {
+		background-color: lightgrey;
+		display: inline;
+		margin-right: 5%;
+		cursor: pointer;
+	}
+</style>
+<h1>Legal Essay Generator</h1>
+<h2 id="generate" class="gen">Generate Essay Question</h3>
+<select id="module" name="module">
+	<option value="crime" selected="selected">Crime</option>
+	<option value="humanrights">Human Rights</option>
+<!-- 	<option value="family">Family</option> -->
+</select>
+<h2 id="shortgenerate" class="gen">Generate Short Question</h3>
+<p id="output"></p>
+<script src="generator.js"></script>
