@@ -102,5 +102,12 @@ function samplespace() {
 			}
 		}
 	}
+	for (var d of verbs) {
+		for (var e of hrthemesandchallenges) {
+			for (var f of hrtopics) {
+				text = text + d + '; ' + e + '; ' + f + '\n';
+			}
+		}
+	}
 	document.getElementById('output').innerText = text;
 }
