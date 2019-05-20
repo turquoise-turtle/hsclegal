@@ -1,3 +1,4 @@
+//generate the sample space and display it in a list, and then go through the past papers to work out what hasn't been done
 
 
 var crimethemesandchallenges = [
@@ -65,7 +66,10 @@ var verbs = [
 ]
 
 document.getElementById('generate').addEventListener('click', essay);
-document.getElementById('shortgenerate').addEventListener('click', function(){gen([learnto])});
+
+document.getElementById('samplespace').addEventListener('click', samplespace);
+
+// document.getElementById('shortgenerate').addEventListener('click', function(){gen([learnto])});
 
 function essay() {
 	var topic = document.getElementById('module').value;
@@ -85,6 +89,18 @@ function gen(listofthings) {
 	for (var e of listofthings) {
 		var len = Math.floor(Math.random() * e.length);
 		text = text + e[len] + '; ';
+	}
+	document.getElementById('output').innerText = text;
+}
+
+function samplespace() {
+	var text = ''
+	for (var a of verbs) {
+		for (var b of crimethemesandchallenges) {
+			for (var c of crimetopics) {
+				text = text + a + '; ' + b + '; ' + c + '\n';
+			}
+		}
 	}
 	document.getElementById('output').innerText = text;
 }
