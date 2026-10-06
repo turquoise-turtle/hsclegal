@@ -1,39 +1,287 @@
-<style>
-	body {
-		font-family: sans-serif;
-	}
-	
-	.gen {
-		background-color: lightgrey;
-		display: inline;
-		margin-right: 5%;
-		cursor: pointer;
-		user-select: none;
-	}
-	.right {
-		margin-left: 5% !important;
-	}
-</style>
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<title>HSC Legal Question Generator</title>
+	<meta name="description" content="Random practice essay and short-answer questions for NSW HSC Legal Studies, covering the 2009 and 2025 syllabuses.">
 
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<!-- Open Graph tags for link previews (Facebook, Messenger, Discord, iMessage). -->
+	<!-- og-image.png is rebuilt with og/make-og-image.sh; see MAINTENANCE.md. -->
+	<meta property="og:title" content="HSC Legal Question Generator" />
+	<meta property="og:description" content="Random practice essay and short-answer questions for NSW HSC Legal Studies, covering the 2009 and 2025 syllabuses." />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="https://turquoise-turtle.github.io/hsclegal/" />
+	<meta property="og:site_name" content="HSC Legal Question Generator" />
+	<meta property="og:locale" content="en_AU" />
+	<meta property="og:image" content="https://turquoise-turtle.github.io/hsclegal/og-image.png" />
+	<meta property="og:image:type" content="image/png" />
+	<meta property="og:image:width" content="1200" />
+	<meta property="og:image:height" content="630" />
+	<meta property="og:image:alt" content="The HSC Legal Question Generator with Crime, Consumers and Family ticked, showing a generated Crime essay question" />
+	<meta name="twitter:card" content="summary_large_image" />
 
-<!-- Facebook Tags -->
-<meta property="og:title" content="HSC Legal Question Generator" /> 
-<meta property="og:image" content="https://placid.app/u/ldell?browser|image=https://turquoise-turtle.github.io/hsclegal&browser|url=https://turquoise-turtle.github.io/hsclegal&title=HSC%20Legal%20Question%20Generator"/>
-<meta property="og:image:height" content="600"/>
-<meta property="og:image:width" content="1200"/>
-<meta property="og:url" content="https://turquoise-turtle.github.io/hsclegal/" />
-<meta property="og:type" content="website" />
+	<style>
+		/* Material 3 segmented buttons and filter chips, with GOV.UK's type weight and focus style. */
+		/* Colours are Material 3's colour roles for an orange seed colour. Every pair meets WCAG AA; recheck them if any change (see MAINTENANCE.md). */
+		:root {
+			--primary: #8f4c38;
+			--on-primary: #ffffff;
+			--secondary-container: #ffdbd1;
+			--on-secondary-container: #2c150f;
+			--outline: #85736e;
+			--surface: #fff8f6;
+			--surface-container: #fceae5;
+			--on-surface: #231917;
+			--on-surface-variant: #53433f;
+		}
 
-<h1>Legal Essay Question Generator</h1>
+		body {
+			margin: 0;
+			background: var(--surface);
+			color: var(--on-surface);
+			font-family: Arial, Helvetica, sans-serif;
+			font-size: 16px;
+			line-height: 1.3;
+		}
 
-<h2 id="generate" class="gen">Generate Essay Question</h3>
-<select id="module" name="module">
-	<option value="crime" selected="selected">Crime</option>
-	<option value="humanrights">Human Rights</option>
-<!-- 	<option value="family">Family</option> -->
-</select>
-<h2 id="samplespace" class="gen right">List sample space of questions</h2>
-<!-- <h2 id="shortgenerate" class="gen">Generate Short Question</h3> -->
-<p id="output"></p>
-<script src="generator.js"></script>
+		main {
+			max-width: 1120px;
+			margin: 0 auto;
+			padding: 16px 16px 32px;
+		}
+
+		h1 {
+			font-size: 32px;
+			line-height: 1.2;
+			margin: 0 0 12px;
+		}
+
+		fieldset {
+			border: 0;
+			padding: 0;
+			margin: 0 0 12px;
+			min-width: 0;
+		}
+
+		legend {
+			padding: 0;
+			margin-bottom: 4px;
+			font-size: 18px;
+			font-weight: 700;
+		}
+
+		.group-label {
+			margin: 6px 0 4px;
+			font-weight: 700;
+		}
+
+		legend + .group-label {
+			margin-top: 0;
+		}
+
+		#core,
+		#options {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 8px;
+		}
+
+		label {
+			position: relative;
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+			cursor: pointer;
+		}
+
+		label:has(input:checked) {
+			font-weight: 700;
+		}
+
+		/* The real input stays in the page for keyboards and screen readers; its label draws the control. */
+		input[type="radio"],
+		input[type="checkbox"] {
+			position: absolute;
+			opacity: 0;
+			width: 1px;
+			height: 1px;
+			margin: 0;
+		}
+
+		/* The tick shows the selected state without relying on colour. Its alt text is empty, so screen readers skip it; the input already says "checked". */
+		label:has(input:checked)::before {
+			content: "\2713" / "";
+			font-weight: 700;
+		}
+
+		/* GOV.UK's focus style: a yellow band with a black edge, visible on any background colour. */
+		label:has(input:focus-visible),
+		button:focus-visible {
+			outline: 3px solid #ffdd00;
+			outline-offset: 0;
+			box-shadow: 0 0 0 5px #0b0c0c;
+			z-index: 1;
+		}
+
+		/* Segmented buttons. They never wrap apart; on a narrow screen their text wraps inside instead. */
+		fieldset.segmented {
+			display: flex;
+			flex-wrap: nowrap;
+		}
+
+		fieldset.segmented label {
+			flex: 0 1 auto;
+			min-width: 0;
+			min-height: 36px;
+			box-sizing: border-box;
+			justify-content: center;
+			text-align: center;
+			padding: 4px 16px;
+			border: 2px solid var(--outline);
+			margin-left: -2px;
+		}
+
+		fieldset.segmented label:first-of-type {
+			border-radius: 18px 0 0 18px;
+			margin-left: 0;
+		}
+
+		fieldset.segmented label:last-of-type {
+			border-radius: 0 18px 18px 0;
+		}
+
+		fieldset.segmented label:has(input:checked) {
+			background: var(--secondary-container);
+			color: var(--on-secondary-container);
+		}
+
+		/* Filter chips for the topics. */
+		#core label,
+		#options label {
+			height: 34px;
+			box-sizing: border-box;
+			padding: 0 14px;
+			border: 2px solid var(--outline);
+			border-radius: 10px;
+			color: var(--on-surface-variant);
+		}
+
+		#core label:has(input:checked),
+		#options label:has(input:checked) {
+			padding-left: 8px;
+			background: var(--secondary-container);
+			border-color: var(--secondary-container);
+			color: var(--on-secondary-container);
+		}
+
+		.actions {
+			margin: 8px 0 0;
+		}
+
+		button {
+			cursor: pointer;
+			font: inherit;
+			font-weight: 700;
+			min-height: 36px;
+			padding: 5px 20px;
+			margin: 0 8px 4px 0;
+			border: 0;
+			border-radius: 18px;
+		}
+
+		#generate {
+			background: var(--primary);
+			color: var(--on-primary);
+		}
+
+		#samplespace {
+			background: var(--secondary-container);
+			color: var(--on-secondary-container);
+		}
+
+		#all,
+		#none {
+			min-height: 30px;
+			padding: 2px 12px;
+			font-size: 14px;
+			background: transparent;
+			color: var(--primary);
+		}
+
+		#status:empty {
+			display: none;
+		}
+
+		#status {
+			margin: 12px 0 0;
+			padding: 8px 14px;
+			border-radius: 12px;
+			background: var(--surface-container);
+		}
+
+		#output ol {
+			padding-left: 1.5em;
+		}
+
+		/* NESA's terms ask for its copyright notice and an acknowledgement on any copy of its material. Kept small and quiet but still readable (4.5:1). */
+		footer {
+			max-width: 1120px;
+			margin: 0 auto;
+			padding: 0 16px 24px;
+			font-size: 13px;
+			line-height: 1.4;
+			color: var(--on-surface-variant);
+		}
+
+		footer a {
+			color: inherit;
+		}
+
+		/* Windows high-contrast mode drops background colours, so give the selected chip or segment a system-colour border as well as the tick. */
+		@media (forced-colors: active) {
+			label:has(input:checked) {
+				border: 3px solid Highlight;
+			}
+		}
+	</style>
+	<script src="generator.js" defer></script>
+</head>
+<body>
+	<main>
+		<h1>Legal Studies Question Generator</h1>
+
+		<fieldset class="segmented">
+			<legend>Syllabus</legend>
+			<label><input type="radio" name="syllabus" value="2009" checked> 2009 syllabus (HSC 2026-2027)</label>
+			<label><input type="radio" name="syllabus" value="2025"> 2025 syllabus (HSC 2028 onwards)</label>
+		</fieldset>
+
+		<fieldset class="segmented">
+			<legend>Question type</legend>
+			<label><input type="radio" name="type" value="essay" checked> Essay</label>
+			<label><input type="radio" name="type" value="short"> Short answer</label>
+		</fieldset>
+
+		<fieldset>
+			<legend>Topics</legend>
+			<div class="group-label" id="core-label">Core</div>
+			<div id="core" role="group" aria-labelledby="core-label"></div>
+			<div class="group-label" id="options-label">Options</div>
+			<div id="options" role="group" aria-labelledby="options-label"></div>
+			<div class="actions">
+				<button type="button" id="all">Tick all</button>
+				<button type="button" id="none">Untick all</button>
+			</div>
+		</fieldset>
+
+		<button type="button" id="generate">Generate question</button>
+		<button type="button" id="samplespace">List all questions</button>
+		<p id="status" role="status"></p>
+		<div id="output"></div>
+	</main>
+	<footer>
+		<p>Syllabus content &copy; NSW Education Standards Authority (NESA) for and on behalf of the Crown in right of the State of New South Wales. NESA is the source of this material, which is used here for personal bona fide study. This site is not affiliated with or endorsed by NESA. See <a href="https://www.nsw.gov.au/education-and-training/nesa/copyright">NESA copyright</a>.</p>
+	</footer>
+</body>
+</html>
