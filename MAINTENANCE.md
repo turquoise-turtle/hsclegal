@@ -9,6 +9,7 @@ How to keep the generator current. Last reviewed 7 October 2026.
 | `index.html` | the page, its controls and the link preview (Open Graph) tags |
 | `generator.js` | the verbs, every question bank and the generator code |
 | `og-image.png` | the link preview image, 1200 x 630 |
+| `NOTICE` | what the GPL covers and what it does not: NESA's syllabus content. `LICENSE` is the standard GPL v3 text and must not be edited, so licensing notes go here. |
 | `og/card.html`, `og/make-og-image.sh` | the layout for the preview image, and the script that renders it |
 
 ## Design
@@ -16,6 +17,7 @@ How to keep the generator current. Last reviewed 7 October 2026.
 The page uses Material 3 shapes (segmented buttons for Syllabus and Question type, filter chips for Topics) with GOV.UK's bold labels and yellow-and-black focus ring. It is compact on purpose: on a laptop screen, every control and a generated question fit without scrolling. All the styles are in the `<style>` block in `index.html`, and there is no external stylesheet or font.
 
 - **Colours** are the nine custom properties at the top of the `<style>` block: Material 3's colour roles for an orange seed colour. To change the theme, replace all nine together with another Material 3 scheme (Material Theme Builder generates them), then recheck the contrast (see Accessibility).
+- **Dark mode** follows the visitor's system or browser setting, through the `@media (prefers-color-scheme: dark)` block just below those properties. It holds the same nine roles from Material 3's dark scheme for the same seed colour. There is deliberately no toggle on the page. When changing the theme, replace the light and dark sets together. To preview dark mode without changing your system setting, use Chrome DevTools: open the Rendering panel and set "Emulate CSS media feature prefers-color-scheme" to dark.
 - **Every chip and segment is a real radio button or checkbox.** The input is visually hidden but still focusable, and its `<label>` draws the control. The tick on a selected item comes from CSS.
 - **The link-preview banner** in `og/card.html` uses a brighter orange (`#dc5537`) than the page. That is deliberate: it stands out in a feed. Change it there if you want it to match.
 
@@ -151,7 +153,7 @@ The page should meet WCAG 2.2 AA. After any change to the page or its styles:
 - **Keyboard:** Tab reaches every control in order, arrow keys switch Syllabus and Question type, Space ticks a topic, and the focus ring is clearly visible on every control.
 - **Real inputs:** the controls must stay real `<input type="radio">` and `<input type="checkbox">` inside a `<label>`, grouped in a `<fieldset>` with a `<legend>`. Styled chips and segments are drawn by CSS around them. Never replace them with clickable `<div>`s.
 - **Not colour alone:** the selected state must show something other than colour, such as the tick mark or bold text, so it survives colour blindness and Windows high-contrast mode.
-- **Contrast:** text needs 4.5:1 against its background. Control borders and the focus ring need 3:1. Check every colour theme, in dark mode too.
+- **Contrast:** text needs 4.5:1 against its background. Control borders and the focus ring need 3:1. Check both the light and dark colour sets. The yellow-and-black focus ring is the same in both modes on purpose.
 - **Screen readers:** `#status` is the only live region, and it holds one short line (the question, or "N questions"). The long list goes in `#output`, which is not live, so it is never read out in full. Decorative symbols added with CSS use empty alt text, such as `content: "\2713" / "";`.
 - **Automated scan:** load axe-core from <https://cdnjs.cloudflare.com/ajax/libs/axe-core/> in the browser console, then run `await axe.run()`. Expect no violations.
 - **Phone width:** at 390px wide nothing should need sideways scrolling, and every control should be at least 24 x 24px (WCAG 2.2 target size).

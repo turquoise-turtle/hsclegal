@@ -34,6 +34,22 @@
 			--surface-container: #fceae5;
 			--on-surface: #231917;
 			--on-surface-variant: #53433f;
+			color-scheme: light dark;
+		}
+
+		/* Dark mode follows the system or browser setting; there is no toggle on the page. Material 3's dark roles for the same orange seed colour. */
+		@media (prefers-color-scheme: dark) {
+			:root {
+				--primary: #ffb5a0;
+				--on-primary: #561f0f;
+				--secondary-container: #5d3f36;
+				--on-secondary-container: #ffdbd1;
+				--outline: #a08c87;
+				--surface: #1a110f;
+				--surface-container: #271d1b;
+				--on-surface: #f1dfda;
+				--on-surface-variant: #d8c2bc;
+			}
 		}
 
 		body {

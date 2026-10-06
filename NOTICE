@@ -1,0 +1,20 @@
+HSC Legal Question Generator
+https://turquoise-turtle.github.io/hsclegal
+
+The code in this repository is licensed under the GNU General Public License,
+version 3 (see LICENSE).
+
+The GPL does not cover the NSW Legal Studies syllabus content in generator.js
+(themes and challenges, topics, "students learn to" points and content dot
+points), or the parts of it shown on the page and in og-image.png:
+
+    © NSW Education Standards Authority (NESA) for and on behalf of the Crown
+    in right of the State of New South Wales.
+
+NESA is the source of this material, which is used here for personal bona fide
+study. This project is not affiliated with or endorsed by NESA. NESA's terms
+of use are at https://www.nsw.gov.au/education-and-training/nesa/copyright and
+permission requests go to copyright@nesa.nsw.edu.au.
+
+The question templates, verb lists and code are this project's own work and
+are covered by the GPL.

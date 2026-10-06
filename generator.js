@@ -1,6 +1,12 @@
 // Question banks for each syllabus. Essays combine a verb, a theme and a topic; short answers come from the syllabus dot points.
 // The 2009 syllabus is examined up to the 2027 HSC, and the 2025 syllabus from the 2028 HSC.
 
+// Copyright notice for the syllabus content in this file (themes and challenges, topics, "students learn to" points and content dot points):
+// © NSW Education Standards Authority (NESA) for and on behalf of the Crown in right of the State of New South Wales.
+// NESA is the source of this material, which is used here for personal bona fide study. It is not covered by this
+// repository's GPL licence (see NOTICE), and this project is not affiliated with or endorsed by NESA.
+// NESA copyright terms: https://www.nsw.gov.au/education-and-training/nesa/copyright
+
 // Verbs and question forms used in the 2015-2025 HSC papers, the 2025 syllabus sample paper and 44 school trial papers (2011-2025).
 const essayVerbs = ['Discuss', 'Assess', 'Evaluate', 'Analyse', 'Explain', 'Examine', 'To what extent', 'How effective', 'How well'];
 const shortVerbs = ['Identify', 'Define', 'Outline', 'Describe', 'Explain', 'Compare', 'Discuss', 'Analyse', 'Examine', 'Justify', 'Why', 'Assess', 'Evaluate'];
