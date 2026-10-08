@@ -9,8 +9,10 @@ How to keep the generator current. Last reviewed 7 October 2026.
 | `index.html` | the page, its controls and the link preview (Open Graph) tags |
 | `generator.js` | the verbs, every question bank and the generator code |
 | `og-image.png` | the link preview image, 1200 x 630 |
+| `favicon.svg`, `favicon-32.png`, `apple-touch-icon.png` | the browser tab icon (scales of justice), and PNG copies of it for browsers without SVG icon support and for iOS home screens |
 | `NOTICE` | what the GPL covers and what it does not: NESA's syllabus content. `LICENSE` is the standard GPL v3 text and must not be edited, so licensing notes go here. |
 | `og/card.html`, `og/make-og-image.sh` | the layout for the preview image, and the script that renders it |
+| `og/make-icons.sh` | the script that renders the PNG tab icons from `favicon.svg` |
 
 ## Design
 
@@ -168,3 +170,13 @@ The page should meet WCAG 2.2 AA. After any change to the page or its styles:
 4. Commit and push. Then paste the site address into Facebook's Sharing Debugger (<https://developers.facebook.com/tools/debug/>) and click **Scrape Again**, because Facebook keeps the old preview otherwise. Other apps refresh their copy on their own, usually within a few days.
 
 The preview tags are in the `<head>` of `index.html`. If the site address changes, update `og:url` and `og:image`, which must be full addresses beginning `https://`.
+
+## Tab icon
+
+The scales in `favicon.svg` are the "Justice" icon from OCHA's humanitarian icon set, drawn by the OCHA Visual Information Unit and released under CC0 (no attribution needed). It is The Noun Project icon 4226, copied from <https://commons.wikimedia.org/wiki/File:Justice_-_The_Noun_Project.svg>. The paths are unchanged. This project only coloured them white and placed them on a rounded square in the light theme's `--primary` colour, `#8f4c38`, which reads on both light and dark tab bars.
+
+The `<link rel="icon">` tags in `index.html` must stay. Without them, browsers ask for `/favicon.ico` at the root of `turquoise-turtle.github.io` and show that site's icon instead.
+
+If you edit `favicon.svg` or change the theme colour, run `og/make-icons.sh` (needs Google Chrome) to redraw `favicon-32.png` and `apple-touch-icon.png` to match. Look at both before committing. `apple-touch-icon.png` has a solid square background on purpose, because iOS rounds the corners itself and fills any transparency with black. Browsers keep icons for a long time, so check a change in a private window.
+
+If you replace the icon, use a human-drawn one that is public domain or CC0, and update the source above and in `NOTICE`.
