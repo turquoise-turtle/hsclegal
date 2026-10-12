@@ -1,6 +1,6 @@
 # Maintenance
 
-How to keep the generator current. Last reviewed 7 October 2026.
+How to keep the generator current. Last reviewed 12 October 2026.
 
 ## Files
 
@@ -28,6 +28,7 @@ The page uses Material 3 shapes (segmented buttons for Syllabus and Question typ
 | when | job |
 |---|---|
 | Each November, after the HSC Legal Studies exam | Check the new paper for verbs or question forms not yet in `essayVerbs` or `shortVerbs` (see Updating the verbs). |
+| Each November after the 2026 and 2027 HSC exams | Tag the new paper's written questions in `pastPapers` (see Past HSC questions). |
 | Whenever NESA posts a notice about the glossary or the syllabus | Check the glossary, syllabus content and record of changes pages linked below. |
 | After the 2027 HSC | Make the 2025 syllabus the default (see Retiring the 2009 syllabus). |
 | After any visible change to the page | Rebuild the preview image. |
@@ -83,6 +84,24 @@ So:
 - Use straight apostrophes and hyphens, not curly quotes or en dashes. Inside the single-quoted strings, write an apostrophe as `\'`.
 - Use Australian spelling (organisation, recognise, behaviour, labour).
 - Keep the syllabus wording. Only reword when the sentence would otherwise be ungrammatical, as with "Investigation" becoming "criminal investigation".
+
+### Past HSC questions (2009 syllabus)
+
+`pastPapers` in `generator.js`, just after `syllabuses`, records every written question in the 2015-2025 HSC papers (the Section II short answers and extended response, and both Section III questions for each option). Multiple-choice questions are left out. Each entry is tagged by bank with:
+
+- `year` and `q`, the question number as printed ("24", "27(b)").
+- `verb`, the opening verb or question form as worded in the paper. Map it to the closest form in the verb lists: "How effectively" is stored as "How effective", and a statement followed by "To what extent is this statement true" is "To what extent".
+- `themes`, `topics` and `learnto`, the indexes of the parts of the syllabus the question covers. `topics` counts the whole focus area as 0, so the first entry in the bank's `topics` list is 1. Leave out any that do not fit.
+- A comment describing the question in a few words. The question wording itself is NESA's, so it is not stored.
+
+Each generated question shows a note under it:
+
+- **Seen in HSC 2019 Q24** (bold, in the primary colour): a past question has the same verb, and the same theme and topic (essays) or the same "students learn to" point (short answers).
+- **Similar to HSC 2019 Q24** (small, muted): the same theme and topic, or the same point, with a different verb.
+
+A short-answer HSC question can still carry theme and topic tags, and an essay can carry a `learnto` tag, so both question types benefit from every paper. The 2025 syllabus has no past papers yet, so it shows no notes.
+
+When tagging a new paper, read it alongside the bank in `generator.js` and pick the parts a marker would expect the answer to cover. Tag generously enough that the matching question shows up, but not so broadly that half the bank is marked. Then click **List all questions** for that bank to check which questions picked up the new year.
 
 ## Updating the verbs
 
@@ -142,7 +161,7 @@ Use the same key for the same subject in both syllabuses (`crime`, `humanrights`
 There is no test suite. After editing:
 
 1. Open `index.html` in a browser. It works straight from the file, without a server.
-2. For each syllabus and each question type, tick all topics and click **List all questions**. Every topic should appear with a count. Skim for broken sentences, a stray "undefined", or curly quotes.
+2. For each syllabus and each question type, tick all topics and click **List all questions**. Every topic should appear with a count. Skim for broken sentences, a stray "undefined", or curly quotes. With the 2009 syllabus, some questions should show a "Seen in HSC" or "Similar to HSC" note.
 3. Click **Generate question** a few times with different topics ticked.
 4. Untick all topics and click Generate. It should ask you to tick a topic.
 5. Check the browser console for errors.
