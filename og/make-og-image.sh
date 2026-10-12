@@ -18,7 +18,7 @@ cp "${repo}/generator.js" "${work}/site/generator.js"
 # The snapshot loads generator.js at the end of the body, then ticks a few topics and shows a fixed question so the image is the same every time.
 perl -0pe '
 	s#\t<script src="generator.js" defer></script>\n##;
-	s#</body>#<script src="generator.js"></script>\n<script>\nfor (const key of ["crime", "consumers", "family"]) { document.querySelector("input[name=bank][value=" + key + "]").checked = true; }\nshowMessage("Crime: " + questions("2009", "crime", "essay").find((q) => q.startsWith("Evaluate the effectiveness of legal and non-legal measures") && q.includes("sentencing")));\n</script>\n</body>#;
+	s#</body>#<script src="generator.js"></script>\n<script>\nfor (const key of ["crime", "consumers", "family"]) { document.querySelector("input[name=bank][value=" + key + "]").checked = true; }\nconst question = questions("2009", "crime", "essay").find((q) => q.text.startsWith("Evaluate the effectiveness of legal and non-legal measures") && q.text.includes("sentencing"));\nshowMessage("Crime: " + question.text);\ndocument.getElementById("status").append(...pastNotes(question, true));\n</script>\n</body>#;
 ' "${repo}/index.html" > "${work}/site/index.html"
 
 "${chrome}" --headless=new --disable-gpu --hide-scrollbars --allow-file-access-from-files --force-device-scale-factor=1 --window-size=1200,630 --virtual-time-budget=3000 --screenshot="${repo}/og-image.png" "file://${work}/card.html" > /dev/null 2>&1

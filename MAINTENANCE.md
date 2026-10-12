@@ -1,6 +1,6 @@
 # Maintenance
 
-How to keep the generator current. Last reviewed 7 October 2026.
+How to keep the generator current. Last reviewed 12 October 2026.
 
 ## Files
 
@@ -28,6 +28,7 @@ The page uses Material 3 shapes (segmented buttons for Syllabus and Question typ
 | when | job |
 |---|---|
 | Each November, after the HSC Legal Studies exam | Check the new paper for verbs or question forms not yet in `essayVerbs` or `shortVerbs` (see Updating the verbs). |
+| Each November after the 2026 and 2027 HSC exams | Tag the new paper's written questions in `pastPapers` (see Past HSC questions). |
 | Whenever NESA posts a notice about the glossary or the syllabus | Check the glossary, syllabus content and record of changes pages linked below. |
 | After the 2027 HSC | Make the 2025 syllabus the default (see Retiring the 2009 syllabus). |
 | After any visible change to the page | Rebuild the preview image. |
@@ -83,6 +84,40 @@ So:
 - Use straight apostrophes and hyphens, not curly quotes or en dashes. Inside the single-quoted strings, write an apostrophe as `\'`.
 - Use Australian spelling (organisation, recognise, behaviour, labour).
 - Keep the syllabus wording. Only reword when the sentence would otherwise be ungrammatical, as with "Investigation" becoming "criminal investigation".
+
+### Past HSC questions (2009 syllabus)
+
+`pastPapers` in `generator.js`, just after `syllabuses`, records every written question in the 2015-2025 HSC papers (the Section II short answers and extended response, and both Section III questions for each option). Multiple-choice questions are left out. Each entry, listed under its bank, has:
+
+- `year` and `q`, the question number as printed ("24", "27(b)").
+- `verb`, the opening verb or question form as worded in the paper. Map it to the closest form in the verb lists: "How effectively" is stored as "How effective", and a statement followed by "To what extent is this statement true" is "To what extent".
+- `essay: { same, similar }`, lists of `[theme, topic]` pairs. Topic indexes count the whole focus area as 0, so the first entry in the bank's `topics` list is 1.
+- `short: { same, similar }`, lists of indexes into the bank's `learnto`.
+- `checked`, who judged the pairings: `'subagent'` (a Claude subagent following a written rubric, October 2026) or `'person'`.
+- A comment describing the question in a few words. The question wording itself is NESA's, so it is not stored.
+
+**same** means "same intent": a good answer to the generated question would be a good answer to the HSC question. **similar** means real overlap, but a different focus, scope or verb demand. These notes only show when **Show related HSC questions** is ticked. It is on by default, is hidden while the 2025 syllabus is selected (no past papers yet), and is a plain CSS switch: nothing is regenerated when it changes. Each generated question then shows:
+
+- **Seen in HSC 2019 Q24** (bold, in the primary colour): a `same` pairing. For an essay, only when the generated verb is the HSC question's verb too; the other verbs get the icon instead. An essay pairing can only be `same` if the HSC verb is one of `essayVerbs`.
+- **≈ icon** (small, muted): a `same` essay pairing asked with a different verb, such as the HSC's "Assess" question generated as "Evaluate". Its text ("Similar to HSC 2019 Q24") shows on hover, or on focus in the one-question view, where the icon is a button. In the long list it is not focusable, to avoid hundreds of tab stops; screen readers still read its hidden text.
+
+The footer (also only shown with the switch on) says these notes are auto-generated and weren't checked by hand, and are only a guide to how NESA worded a similar question. Keep that disclaimer while most entries are `checked: 'subagent'`.
+
+`similar` pairings are kept in the data but not shown. The subagents found so many that the icon appeared on most essays and stopped meaning anything; they stay for future use (a "related questions" list, say) and as judging data.
+
+An HSC short answer can still share an essay's theme and topic, and the reverse, so both question types benefit from every paper. The 2025 syllabus has no past papers yet, so it shows no notes.
+
+#### Judging a new paper
+
+The October 2026 pairings were judged by nine Claude subagents, one per bank, against a written rubric. A person then spot-checked the uncertain "same intent" calls in a local review page. The tools live in `review/`, which is kept out of git because it holds the papers' wording (NESA copyright):
+
+- `review/papers/<year>.txt`, the text of each paper (extracted from the NESA PDFs with macOS PDFKit).
+- `review/build.py`, which pulls each written question's wording out of the papers into `review/past-questions.js`.
+- `review/agent/RUBRIC.md`, the rubric. `input-<bank>.json` are the subagents' inputs, `out-<bank>.json` their judgements, with a confidence and a reason for each pairing.
+- `review/agent/apply.py`, which checks the judgements and rewrites `pastPapers` from them.
+- `review/index.html`, the review page. Serve the repository folder (for example `python3 -m http.server`) and open `/review/`. It opens on the subagents' unsure "same intent" calls; change any you disagree with and Confirm. **Export** downloads `decisions.json` (every judgement, who made it and what the subagent said) and the `pastPapers` block.
+
+For a new paper: add its text to `review/papers/`, add its questions to `pastPapers` with empty pairings, run `build.py`, rebuild the inputs and run a subagent per bank with the rubric (ask Claude), then `apply.py`. Questions already `checked` don't need judging again. Then click **List all questions** to see which generated questions picked up the new year.
 
 ## Updating the verbs
 
@@ -142,7 +177,7 @@ Use the same key for the same subject in both syllabuses (`crime`, `humanrights`
 There is no test suite. After editing:
 
 1. Open `index.html` in a browser. It works straight from the file, without a server.
-2. For each syllabus and each question type, tick all topics and click **List all questions**. Every topic should appear with a count. Skim for broken sentences, a stray "undefined", or curly quotes.
+2. For each syllabus and each question type, tick all topics and click **List all questions**. Every topic should appear with a count. Skim for broken sentences, a stray "undefined", or curly quotes. With the 2009 syllabus, some questions should show a "Seen in HSC" or "Similar to HSC" note.
 3. Click **Generate question** a few times with different topics ticked.
 4. Untick all topics and click Generate. It should ask you to tick a topic.
 5. Check the browser console for errors.

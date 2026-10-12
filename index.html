@@ -177,9 +177,10 @@
 			color: var(--on-secondary-container);
 		}
 
-		/* Filter chips for the topics. */
+		/* Filter chips for the topics, and the "Show related" switch. */
 		#core label,
-		#options label {
+		#options label,
+		label.chip {
 			height: 34px;
 			box-sizing: border-box;
 			padding: 0 14px;
@@ -189,7 +190,8 @@
 		}
 
 		#core label:has(input:checked),
-		#options label:has(input:checked) {
+		#options label:has(input:checked),
+		label.chip:has(input:checked) {
 			padding-left: 8px;
 			background: var(--secondary-container);
 			border-color: var(--secondary-container);
@@ -245,6 +247,82 @@
 			padding-left: 1.5em;
 		}
 
+		label.chip {
+			margin: 0 0 12px;
+		}
+
+		/* Only the 2009 syllabus has past papers, so the switch and its disclaimer have nothing to do for 2025. */
+		body:has(input[name="syllabus"][value="2025"]:checked) :is(label.chip, #related-note) {
+			display: none;
+		}
+
+		/* Past-paper notes, and the disclaimer about them, only show with "Show related HSC questions" ticked.
+		   display: none also takes the icons out of the tab order and hides them from screen readers. */
+		body:not(:has(#related:checked)) :is(.seen, .similar-icon, #related-note) {
+			display: none;
+		}
+
+		/* Where a question has come up in a past HSC paper. "Seen" (same verb too) is a visible line; "Similar" is only a small icon whose text shows on hover or focus. */
+		#status,
+		#output li {
+			position: relative;
+		}
+
+		.seen {
+			display: block;
+			font-size: 13px;
+			line-height: 1.4;
+			color: var(--primary);
+			font-weight: 600;
+		}
+
+		/* Inline in the question's sentence, so it is exempt from the 24px target size. */
+		.similar-icon {
+			display: inline-grid;
+			place-items: center;
+			width: 18px;
+			height: 18px;
+			min-height: 0;
+			margin: 0;
+			padding: 0;
+			border: 1px solid var(--outline);
+			border-radius: 50%;
+			background: transparent;
+			color: var(--on-surface-variant);
+			font: 600 12px/1 system-ui, sans-serif;
+			vertical-align: 1px;
+			cursor: help;
+		}
+
+		/* The tip spans the line it belongs to, so it never runs off a phone screen. */
+		.similar-icon:hover::after,
+		.similar-icon:focus-visible::after {
+			content: attr(data-tip);
+			position: absolute;
+			z-index: 1;
+			top: 100%;
+			left: 0;
+			max-width: 100%;
+			margin-top: 2px;
+			padding: 4px 8px;
+			border-radius: 6px;
+			background: var(--on-surface);
+			color: var(--surface);
+			font-size: 13px;
+			font-weight: normal;
+			line-height: 1.4;
+			text-align: left;
+		}
+
+		.visually-hidden {
+			position: absolute;
+			width: 1px;
+			height: 1px;
+			overflow: hidden;
+			clip-path: inset(50%);
+			white-space: nowrap;
+		}
+
 		/* NESA's terms ask for its copyright notice and an acknowledgement on any copy of its material. Kept small and quiet but still readable (4.5:1). */
 		footer {
 			max-width: 1120px;
@@ -284,6 +362,8 @@
 			<label><input type="radio" name="type" value="short"> Short answer</label>
 		</fieldset>
 
+		<label class="chip"><input type="checkbox" id="related" checked> Show related HSC questions</label>
+
 		<fieldset>
 			<legend>Topics</legend>
 			<div class="group-label" id="core-label">Core</div>
@@ -302,6 +382,7 @@
 		<div id="output"></div>
 	</main>
 	<footer>
+		<p id="related-note">The "Seen in HSC" notes and &asymp; icons are auto-generated and weren't checked by hand, so some will be wrong. They are only a guide, in case you want to see how NESA worded a similar question: the papers are on NESA's <a href="https://www.nsw.gov.au/education-and-training/nesa/curriculum/hsc-exam-papers/legal-studies">HSC Legal Studies exam papers</a> page.</p>
 		<p>Syllabus content &copy; NSW Education Standards Authority (NESA) for and on behalf of the Crown in right of the State of New South Wales. NESA is the source of this material, which is used here for personal bona fide study. This site is not affiliated with or endorsed by NESA. See <a href="https://www.nsw.gov.au/education-and-training/nesa/copyright">NESA copyright</a>.</p>
 	</footer>
 </body>
