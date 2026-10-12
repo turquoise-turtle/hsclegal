@@ -99,7 +99,9 @@ So:
 **same** means "same intent": a good answer to the generated question would be a good answer to the HSC question. **similar** means real overlap, but a different focus, scope or verb demand. Each generated question shows:
 
 - **Seen in HSC 2019 Q24** (bold, in the primary colour): a `same` pairing. For an essay, only when the generated verb is the HSC question's verb too; the other verbs get the icon instead. An essay pairing can only be `same` if the HSC verb is one of `essayVerbs`.
-- **≈ icon** (small, muted): a `similar` pairing, or a `same` essay pairing with another verb. Its text ("Similar to HSC 2019 Q24") shows on hover, or on focus in the one-question view, where the icon is a button. In the long list it is not focusable, to avoid hundreds of tab stops; screen readers still read its hidden text.
+- **≈ icon** (small, muted): a `same` essay pairing asked with a different verb, such as the HSC's "Assess" question generated as "Evaluate". Its text ("Similar to HSC 2019 Q24") shows on hover, or on focus in the one-question view, where the icon is a button. In the long list it is not focusable, to avoid hundreds of tab stops; screen readers still read its hidden text.
+
+`similar` pairings are kept in the data but not shown. The subagents found so many that the icon appeared on most essays and stopped meaning anything; they stay for future use (a "related questions" list, say) and as judging data.
 
 An HSC short answer can still share an essay's theme and topic, and the reverse, so both question types benefit from every paper. The 2025 syllabus has no past papers yet, so it shows no notes.
 

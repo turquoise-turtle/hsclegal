@@ -507,8 +507,9 @@ const syllabuses = {
 // Written questions from the 2015-2025 HSC papers, matched to the generated questions they resemble, so a generated question can say it has been seen before.
 // The question wording is not stored. Each entry has the year, the question number and the opening verb or question form as worded in the paper, then:
 // - essay: { same, similar }, lists of [theme, topic] pairs. Themes index the bank's `themes`; topics index [area].concat(topics), so 0 is the whole focus area.
-//   `same` means the generated essay with this question's verb asks the same thing: it shows as "Seen", and the other verbs as similar.
+//   `same` means the generated essay with this question's verb asks the same thing: it shows as "Seen", and the other verbs get the similar icon.
 // - short: { same, similar }, lists of indexes into the bank's `learnto`. `same` shows as "Seen", whatever the verb.
+//   `similar` pairings (broad overlap) are kept as data but not shown: they covered most of the bank, so the icon stopped meaning anything.
 // - checked: who judged the pairings. 'subagent' is a Claude subagent following a written rubric; 'person' means someone confirmed them in the local review tool.
 //   Either way the entry need not be judged again. Entries without it are best guesses.
 // An HSC short answer can still share an essay's theme and topic, and the reverse, so an entry can have both.
@@ -777,20 +778,16 @@ function hasPair(pairs, theme, topic) {
 	return (pairs || []).some((pair) => pair[0] === theme && pair[1] === topic);
 }
 
+// Only `same` pairings show. An essay with the HSC question's verb is "seen"; with another verb it is "similar" (the icon).
 function judgeEssay(past, verb, theme, topic) {
-	const essay = past.essay || {};
-	if (hasPair(essay.same, theme, topic)) {
-		return past.verb === verb ? 'seen' : 'similar';
+	if (!hasPair(past.essay && past.essay.same, theme, topic)) {
+		return null;
 	}
-	return hasPair(essay.similar, theme, topic) ? 'similar' : null;
+	return past.verb === verb ? 'seen' : 'similar';
 }
 
 function judgeShort(past, point) {
-	const short = past.short || {};
-	if ((short.same || []).includes(point)) {
-		return 'seen';
-	}
-	return (short.similar || []).includes(point) ? 'similar' : null;
+	return ((past.short && past.short.same) || []).includes(point) ? 'seen' : null;
 }
 
 // Lists past questions by year, such as "2019 Q22, Q23, 2022 Q24". pastPapers is in year order, so the years come out in order.
