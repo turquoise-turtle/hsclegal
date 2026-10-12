@@ -504,231 +504,234 @@ const syllabuses = {
 	}
 };
 
-// Written questions from the 2015-2025 HSC papers, tagged with the parts of the 2009 syllabus they cover, so a generated question can say it has been seen before.
-// The question wording is not stored. Each entry has the year, the question number, the opening verb or question form as worded in the paper,
-// and indexes into its bank: themes into `themes`, topics into [area].concat(topics) (so 0 is the whole focus area), learnto into `learnto`.
-// A generated essay matches when its theme and topic are both tagged; a short answer matches when its learnto point is tagged.
-// It is "seen" when the verb matches too, and "similar" otherwise. A question can match both ways, as an HSC short answer can still share an essay's theme and topic.
+// Written questions from the 2015-2025 HSC papers, matched to the generated questions they resemble, so a generated question can say it has been seen before.
+// The question wording is not stored. Each entry has the year, the question number and the opening verb or question form as worded in the paper, then:
+// - essay: { same, similar }, lists of [theme, topic] pairs. Themes index the bank's `themes`; topics index [area].concat(topics), so 0 is the whole focus area.
+//   `same` means the generated essay with this question's verb asks the same thing: it shows as "Seen", and the other verbs as similar.
+// - short: { same, similar }, lists of indexes into the bank's `learnto`. `same` shows as "Seen", whatever the verb.
+// - checked: who judged the pairings. 'subagent' is a Claude subagent following a written rubric; 'person' means someone confirmed them in the local review tool.
+//   Either way the entry need not be judged again. Entries without it are best guesses.
+// An HSC short answer can still share an essay's theme and topic, and the reverse, so an entry can have both.
 const pastPapers = {
 	crime: [
-		{ year: 2015, q: '24', verb: 'How effective', themes: [5], topics: [6], learnto: [24] }, // domestic and international measures for transnational crime
-		{ year: 2016, q: '24', verb: 'To what extent', themes: [5], topics: [5], learnto: [20, 21] }, // treating young offenders differently to achieve justice
-		{ year: 2017, q: '24', verb: 'Assess', themes: [4], topics: [2], learnto: [7] }, // bail and remand, community interests and individual rights
-		{ year: 2018, q: '25', verb: 'Discuss', themes: [0], topics: [0] }, // discretion in achieving justice
-		{ year: 2019, q: '24', verb: 'Explain', themes: [4], topics: [4], learnto: [17] }, // post-sentencing considerations balancing interests
-		{ year: 2020, q: '24', verb: 'To what extent', themes: [2], topics: [3] }, // trial process and moral and ethical standards
-		{ year: 2021, q: '25', verb: 'Assess', themes: [5], topics: [0, 1, 4], learnto: [4, 18] }, // punishing offenders rather than preventing crime
-		{ year: 2022, q: '25', verb: 'Assess', themes: [3, 4], topics: [0, 5], learnto: [19] }, // law reform balancing rights, age of criminal responsibility
-		{ year: 2023, q: '25', verb: 'To what extent', themes: [1], topics: [0, 3], learnto: [8] }, // courts encouraging compliance
-		{ year: 2024, q: '24', verb: 'To what extent', themes: [5], topics: [3, 4], learnto: [13, 18] }, // trial and sentencing, justice for adult offenders
-		{ year: 2025, q: '24', verb: 'Analyse', themes: [4, 5], topics: [0, 6], learnto: [23] } // protecting community interests, transnational and domestic crime
+		{ year: 2015, q: '24', verb: 'How effective', essay: { same: [[5, 6]], similar: [[5, 0]] }, short: { same: [24], similar: [23] }, checked: 'subagent' }, // domestic and international measures for transnational crime
+		{ year: 2016, q: '24', verb: 'To what extent', essay: { same: [[5, 5]], similar: [[0, 5], [4, 5]] }, short: { same: [21], similar: [19, 20] }, checked: 'subagent' }, // treating young offenders differently to achieve justice
+		{ year: 2017, q: '24', verb: 'Assess', essay: { same: [[4, 2]], similar: [[3, 2], [4, 0], [4, 3], [5, 2]] }, short: { similar: [7] }, checked: 'subagent' }, // bail and remand, community interests and individual rights
+		{ year: 2018, q: '25', verb: 'Discuss', essay: { same: [[0, 0]], similar: [[0, 2], [0, 3], [0, 4], [0, 5]] }, short: { similar: [14] }, checked: 'subagent' }, // discretion in achieving justice
+		{ year: 2019, q: '24', verb: 'Explain', essay: { same: [[4, 4]], similar: [[4, 0], [5, 4]] }, short: { same: [17] }, checked: 'subagent' }, // post-sentencing considerations balancing interests
+		{ year: 2020, q: '24', verb: 'To what extent', essay: { same: [[2, 3]], similar: [[2, 0]] }, short: { similar: [11, 12, 13] }, checked: 'subagent' }, // trial process and moral and ethical standards
+		{ year: 2021, q: '25', verb: 'Assess', essay: { similar: [[5, 0], [5, 1], [5, 4]] }, short: { similar: [4, 15, 18] }, checked: 'subagent' }, // punishing offenders rather than preventing crime
+		{ year: 2022, q: '25', verb: 'Assess', essay: { same: [[3, 0]], similar: [[3, 5], [4, 0], [4, 5]] }, short: { similar: [19] }, checked: 'subagent' }, // law reform balancing rights, age of criminal responsibility
+		{ year: 2023, q: '25', verb: 'To what extent', essay: { same: [[1, 3]], similar: [[1, 0], [1, 4]] }, short: { similar: [8, 14] }, checked: 'subagent' }, // courts encouraging compliance
+		{ year: 2024, q: '24', verb: 'To what extent', essay: { same: [[5, 3], [5, 4]], similar: [[4, 3], [4, 4]] }, short: { similar: [13, 18] }, checked: 'subagent' }, // trial and sentencing, justice for adult offenders
+		{ year: 2025, q: '24', verb: 'Analyse', essay: { similar: [[4, 0], [4, 6], [5, 0], [5, 6]] }, short: { similar: [23, 24] }, checked: 'subagent' } // protecting community interests, transnational and domestic crime
 	],
 	humanrights: [
-		{ year: 2015, q: '21', verb: 'Explain', themes: [4], topics: [2], learnto: [7] }, // a statutory authority promoting human rights
-		{ year: 2015, q: '22', verb: 'Outline', themes: [3], topics: [1], learnto: [1] }, // law reform and the abolition of slavery
-		{ year: 2015, q: '23', verb: 'Compare', themes: [4], topics: [2], learnto: [6, 7] }, // common law and statute law enforcing human rights
-		{ year: 2016, q: '21', verb: 'Outline', topics: [2], learnto: [6] }, // incorporation into Australian domestic law
-		{ year: 2016, q: '22', verb: 'Discuss', themes: [3], topics: [2], learnto: [8] }, // a Charter of Rights
-		{ year: 2016, q: '23', verb: 'Assess', themes: [1, 4], topics: [3], learnto: [9] }, // protection versus enforcement, a contemporary issue
-		{ year: 2017, q: '21', verb: 'Outline', topics: [1] }, // trade unionism and labour rights
-		{ year: 2017, q: '22', verb: 'Describe', themes: [4], topics: [2], learnto: [6, 7] }, // the common law promoting and enforcing human rights
-		{ year: 2017, q: '23', verb: 'Evaluate', themes: [4], topics: [3], learnto: [9] }, // responses to a contemporary issue
-		{ year: 2018, q: '21', verb: 'List', topics: [1], learnto: [0] }, // features of human rights
-		{ year: 2018, q: '22', verb: 'Why', topics: [1], learnto: [2] }, // self-determination
-		{ year: 2018, q: '23', verb: 'Explain', themes: [4], topics: [2], learnto: [7] }, // separation of powers
-		{ year: 2018, q: '24', verb: 'How effective', themes: [4], topics: [2], learnto: [5] }, // NGOs and the media
-		{ year: 2019, q: '21', verb: 'Outline', themes: [2], topics: [1], learnto: [1] }, // universal suffrage over time
-		{ year: 2019, q: '22', verb: 'How', topics: [2], learnto: [5] }, // the United Nations
-		{ year: 2019, q: '23', verb: 'How effective', themes: [4], topics: [2, 3], learnto: [5, 9] }, // international responses, a contemporary issue
-		{ year: 2020, q: '21', verb: 'How', themes: [2], topics: [1], learnto: [3] }, // the ICCPR
-		{ year: 2020, q: '22', verb: 'Explain', themes: [4], topics: [2], learnto: [5] }, // intergovernmental organisations
-		{ year: 2020, q: '23', verb: 'To what extent', themes: [1], topics: [2], learnto: [5] }, // compliance with international human rights law
-		{ year: 2021, q: '21', verb: 'Define', topics: [1], learnto: [0] }, // human rights
-		{ year: 2021, q: '22', verb: 'How', topics: [1], learnto: [2] }, // environmental rights
-		{ year: 2021, q: '23', verb: 'Describe', themes: [0], topics: [0, 2], learnto: [4] }, // state sovereignty
-		{ year: 2021, q: '24', verb: 'Discuss', themes: [4], topics: [2], learnto: [7] }, // Australian legal responses
-		{ year: 2022, q: '21', verb: 'Identify', topics: [2], learnto: [6] }, // rights in the Constitution
-		{ year: 2022, q: '22', verb: 'Outline', themes: [4], topics: [2], learnto: [5] }, // NGOs
-		{ year: 2022, q: '23', verb: 'Explain', themes: [2], topics: [1], learnto: [1, 2] }, // recognition of one right over time
-		{ year: 2022, q: '24', verb: 'Discuss', themes: [4], topics: [2], learnto: [5] }, // the United Nations
-		{ year: 2023, q: '21', verb: 'Identify', topics: [1], learnto: [0] }, // features of human rights
-		{ year: 2023, q: '22', verb: 'Outline', topics: [1], learnto: [2] }, // universal education
-		{ year: 2023, q: '23', verb: 'How', themes: [4], topics: [2], learnto: [6, 7] }, // the High Court
-		{ year: 2023, q: '24', verb: 'Evaluate', themes: [4], topics: [3], learnto: [9] }, // legal responses, a contemporary issue
-		{ year: 2024, q: '21', verb: 'Define', topics: [1], learnto: [2] }, // self-determination
-		{ year: 2024, q: '22', verb: 'Discuss', themes: [2], topics: [2], learnto: [6] }, // the Constitution and changing values
-		{ year: 2024, q: '23', verb: 'Analyse', themes: [0], topics: [3], learnto: [4, 9] }, // state sovereignty, a contemporary issue
-		{ year: 2025, q: '21', verb: 'How', themes: [2], topics: [1], learnto: [1, 2] }, // peace rights over time
-		{ year: 2025, q: '22', verb: 'Explain', themes: [2], topics: [1, 2], learnto: [5] }, // the media and change
-		{ year: 2025, q: '23', verb: 'How', themes: [4], topics: [2], learnto: [7] } // legal measures protecting human rights
+		{ year: 2015, q: '21', verb: 'Explain', essay: { similar: [[4, 2]] }, short: { similar: [6, 7] }, checked: 'subagent' }, // a statutory authority promoting human rights
+		{ year: 2015, q: '22', verb: 'Outline', essay: { similar: [[2, 1], [3, 1]] }, short: { similar: [1, 2] }, checked: 'subagent' }, // law reform and the abolition of slavery
+		{ year: 2015, q: '23', verb: 'Compare', essay: { similar: [[4, 2]] }, short: { similar: [6, 7] }, checked: 'subagent' }, // common law and statute law enforcing human rights
+		{ year: 2016, q: '21', verb: 'Outline', short: { same: [6], similar: [7] }, checked: 'subagent' }, // incorporation into Australian domestic law
+		{ year: 2016, q: '22', verb: 'Discuss', essay: { similar: [[3, 0], [3, 2]] }, short: { same: [8], similar: [7] }, checked: 'subagent' }, // a Charter of Rights
+		{ year: 2016, q: '23', verb: 'Assess', essay: { same: [[1, 3], [4, 3]], similar: [[0, 3], [1, 0], [4, 0]] }, short: { similar: [9] }, checked: 'subagent' }, // protection versus enforcement, a contemporary issue
+		{ year: 2017, q: '21', verb: 'Outline', essay: { similar: [[2, 1], [4, 2]] }, short: { similar: [1] }, checked: 'subagent' }, // trade unionism and labour rights
+		{ year: 2017, q: '22', verb: 'Describe', essay: { similar: [[4, 2]] }, short: { similar: [6, 7] }, checked: 'subagent' }, // the common law promoting and enforcing human rights
+		{ year: 2017, q: '23', verb: 'Evaluate', essay: { same: [[4, 3]], similar: [[1, 3], [3, 3], [4, 0]] }, short: { same: [9] }, checked: 'subagent' }, // responses to a contemporary issue
+		{ year: 2018, q: '21', verb: 'List', short: { same: [0] }, checked: 'subagent' }, // features of human rights
+		{ year: 2018, q: '22', verb: 'Why', essay: { similar: [[2, 1]] }, short: { similar: [1, 2] }, checked: 'subagent' }, // self-determination
+		{ year: 2018, q: '23', verb: 'Explain', essay: { similar: [[4, 2]] }, short: { similar: [7] }, checked: 'subagent' }, // separation of powers
+		{ year: 2018, q: '24', verb: 'How effective', essay: { similar: [[4, 2]] }, short: { similar: [5, 7] }, checked: 'subagent' }, // NGOs and the media
+		{ year: 2019, q: '21', verb: 'Outline', essay: { similar: [[2, 1]] }, short: { similar: [1, 2] }, checked: 'subagent' }, // universal suffrage over time
+		{ year: 2019, q: '22', verb: 'How', essay: { similar: [[4, 2]] }, short: { similar: [5] }, checked: 'subagent' }, // the United Nations
+		{ year: 2019, q: '23', verb: 'How effective', essay: { similar: [[1, 2], [4, 2], [4, 3]] }, short: { same: [5], similar: [9] }, checked: 'subagent' }, // international responses, a contemporary issue
+		{ year: 2020, q: '21', verb: 'How', essay: { similar: [[2, 1]] }, short: { same: [3], similar: [1, 2] }, checked: 'subagent' }, // the ICCPR
+		{ year: 2020, q: '22', verb: 'Explain', essay: { similar: [[4, 2]] }, short: { similar: [5] }, checked: 'subagent' }, // intergovernmental organisations
+		{ year: 2020, q: '23', verb: 'To what extent', essay: { same: [[1, 0], [1, 2]], similar: [[0, 0], [0, 2], [1, 3]] }, short: { similar: [4, 5] }, checked: 'subagent' }, // compliance with international human rights law
+		{ year: 2021, q: '21', verb: 'Define', short: { same: [0] }, checked: 'subagent' }, // human rights
+		{ year: 2021, q: '22', verb: 'How', essay: { similar: [[2, 1]] }, short: { similar: [1, 2] }, checked: 'subagent' }, // environmental rights
+		{ year: 2021, q: '23', verb: 'Describe', essay: { similar: [[0, 0], [0, 2], [0, 3]] }, short: { similar: [4] }, checked: 'subagent' }, // state sovereignty
+		{ year: 2021, q: '24', verb: 'Discuss', essay: { similar: [[3, 2], [4, 2]] }, short: { same: [7], similar: [6, 8] }, checked: 'subagent' }, // Australian legal responses
+		{ year: 2022, q: '21', verb: 'Identify', short: { similar: [6, 7] }, checked: 'subagent' }, // rights in the Constitution
+		{ year: 2022, q: '22', verb: 'Outline', essay: { similar: [[4, 2]] }, short: { similar: [5] }, checked: 'subagent' }, // NGOs
+		{ year: 2022, q: '23', verb: 'Explain', essay: { similar: [[2, 1]] }, short: { similar: [1, 2] }, checked: 'subagent' }, // recognition of one right over time
+		{ year: 2022, q: '24', verb: 'Discuss', essay: { similar: [[0, 2], [4, 2]] }, short: { similar: [5] }, checked: 'subagent' }, // the United Nations
+		{ year: 2023, q: '21', verb: 'Identify', short: { same: [0] }, checked: 'subagent' }, // features of human rights
+		{ year: 2023, q: '22', verb: 'Outline', essay: { similar: [[2, 1]] }, short: { similar: [1, 2] }, checked: 'subagent' }, // universal education
+		{ year: 2023, q: '23', verb: 'How', essay: { similar: [[4, 2]] }, short: { similar: [6, 7] }, checked: 'subagent' }, // the High Court
+		{ year: 2023, q: '24', verb: 'Evaluate', essay: { same: [[4, 3]], similar: [[4, 0], [4, 2]] }, short: { same: [9], similar: [5, 7] }, checked: 'subagent' }, // legal responses, a contemporary issue
+		{ year: 2024, q: '21', verb: 'Define', short: { similar: [1, 2] }, checked: 'subagent' }, // self-determination
+		{ year: 2024, q: '22', verb: 'Discuss', essay: { similar: [[2, 0], [2, 2], [3, 2]] }, short: { similar: [6, 7, 8] }, checked: 'subagent' }, // the Constitution and changing values
+		{ year: 2024, q: '23', verb: 'Analyse', essay: { same: [[0, 3]], similar: [[0, 0], [0, 2], [1, 3]] }, short: { similar: [4, 9] }, checked: 'subagent' }, // state sovereignty, a contemporary issue
+		{ year: 2025, q: '21', verb: 'How', essay: { similar: [[2, 1]] }, short: { similar: [1, 2] }, checked: 'subagent' }, // peace rights over time
+		{ year: 2025, q: '22', verb: 'Explain', essay: { similar: [[2, 1], [2, 2], [3, 2], [4, 2]] }, short: { similar: [5] }, checked: 'subagent' }, // the media and change
+		{ year: 2025, q: '23', verb: 'How', essay: { similar: [[4, 0], [4, 2]] }, short: { similar: [5, 6, 7] }, checked: 'subagent' } // legal measures protecting human rights
 	],
 	consumers: [
-		{ year: 2015, q: '25(a)', verb: 'To what extent', themes: [4], topics: [0], learnto: [5] }, // NGOs, media and awareness
-		{ year: 2015, q: '25(b)', verb: 'Assess', themes: [4], topics: [1, 5], learnto: [3] }, // regulation of marketing and advertising
-		{ year: 2016, q: '25(a)', verb: 'To what extent', themes: [0], topics: [0] }, // cooperation to resolve conflict
-		{ year: 2016, q: '25(b)', verb: 'Evaluate', themes: [4], topics: [3], learnto: [8] }, // credit
-		{ year: 2017, q: '25(a)', verb: 'Evaluate', themes: [3], topics: [7] }, // a changing legal system, a contemporary issue
-		{ year: 2017, q: '25(b)', verb: 'Assess', themes: [4], topics: [0], learnto: [7] }, // legal and non-legal measures
-		{ year: 2018, q: '26(a)', verb: 'Evaluate', themes: [2], topics: [0] }, // changing values
-		{ year: 2018, q: '26(b)', verb: 'To what extent', themes: [4], topics: [1, 5], learnto: [3] }, // regulation of marketing and advertising
-		{ year: 2019, q: '25(a)', verb: 'Evaluate', themes: [4], topics: [2], learnto: [6] }, // redress and remedies
-		{ year: 2019, q: '25(b)', verb: 'Assess', themes: [3], topics: [7] }, // law reform, a contemporary issue
-		{ year: 2020, q: '25(a)', verb: 'Evaluate', themes: [4], topics: [6], learnto: [11] }, // technology
-		{ year: 2020, q: '25(b)', verb: 'To what extent', themes: [1], topics: [0] }, // compliance
-		{ year: 2021, q: '26(a)', verb: 'To what extent', themes: [4], topics: [2], learnto: [6] }, // courts and tribunals
-		{ year: 2021, q: '26(b)', verb: 'Assess', themes: [2, 3], topics: [0] }, // failing to respond to change
-		{ year: 2022, q: '26(a)', verb: 'To what extent', themes: [4], topics: [0], learnto: [7] }, // legal versus non-legal responses
-		{ year: 2022, q: '26(b)', verb: 'Evaluate', themes: [0], topics: [7] }, // cooperation, at least one issue
-		{ year: 2023, q: '26(a)', verb: 'To what extent', themes: [4], topics: [4, 5], learnto: [9, 10] }, // product certification and marketing innovations
-		{ year: 2023, q: '26(b)', verb: 'Assess', themes: [4], topics: [0, 2], learnto: [7] }, // government and non-government organisations
-		{ year: 2024, q: '25(a)', verb: 'Analyse', themes: [4], topics: [0, 2], learnto: [7] }, // state and federal government organisations
-		{ year: 2024, q: '25(b)', verb: 'To what extent', themes: [4], topics: [3, 6], learnto: [8, 11] }, // credit and technology
-		{ year: 2025, q: '25(a)', verb: 'To what extent', themes: [1], topics: [0] }, // non-compliance
-		{ year: 2025, q: '25(b)', verb: 'Assess', themes: [2], topics: [7] } // changing values and just outcomes, a contemporary issue
+		{ year: 2015, q: '25(a)', verb: 'To what extent', essay: { similar: [[4, 0]] }, short: { similar: [5, 7] }, checked: 'subagent' }, // NGOs, media and awareness
+		{ year: 2015, q: '25(b)', verb: 'Assess', essay: { similar: [[4, 1], [4, 5]] }, short: { same: [3], similar: [10] }, checked: 'subagent' }, // regulation of marketing and advertising
+		{ year: 2016, q: '25(a)', verb: 'To what extent', essay: { same: [[0, 0]], similar: [[0, 2]] }, short: { similar: [6] }, checked: 'subagent' }, // cooperation to resolve conflict
+		{ year: 2016, q: '25(b)', verb: 'Evaluate', essay: { same: [[4, 3]], similar: [[1, 3], [3, 3]] }, short: { same: [8] }, checked: 'subagent' }, // credit
+		{ year: 2017, q: '25(a)', verb: 'Evaluate', essay: { same: [[3, 7]], similar: [[2, 7], [3, 0], [4, 7]] }, checked: 'subagent' }, // a changing legal system, a contemporary issue
+		{ year: 2017, q: '25(b)', verb: 'Assess', essay: { same: [[4, 0]], similar: [[4, 2], [4, 7]] }, short: { same: [7] }, checked: 'subagent' }, // legal and non-legal measures
+		{ year: 2018, q: '26(a)', verb: 'Evaluate', essay: { same: [[2, 0]], similar: [[2, 7], [3, 0]] }, short: { similar: [0] }, checked: 'subagent' }, // changing values
+		{ year: 2018, q: '26(b)', verb: 'To what extent', essay: { similar: [[4, 1], [4, 5]] }, short: { same: [3], similar: [10] }, checked: 'subagent' }, // regulation of marketing and advertising
+		{ year: 2019, q: '25(a)', verb: 'Evaluate', essay: { same: [[4, 2]], similar: [[0, 2]] }, short: { similar: [6, 7] }, checked: 'subagent' }, // redress and remedies
+		{ year: 2019, q: '25(b)', verb: 'Assess', essay: { same: [[3, 0], [3, 7]], similar: [[2, 7]] }, checked: 'subagent' }, // law reform, a contemporary issue
+		{ year: 2020, q: '25(a)', verb: 'Evaluate', essay: { same: [[4, 6]], similar: [[1, 6], [3, 6]] }, short: { same: [11] }, checked: 'subagent' }, // technology
+		{ year: 2020, q: '25(b)', verb: 'To what extent', essay: { same: [[1, 0]], similar: [[1, 1], [1, 7]] }, checked: 'subagent' }, // compliance
+		{ year: 2021, q: '26(a)', verb: 'To what extent', essay: { same: [[4, 2]], similar: [[0, 2], [4, 0]] }, short: { similar: [6, 7] }, checked: 'subagent' }, // courts and tribunals
+		{ year: 2021, q: '26(b)', verb: 'Assess', essay: { same: [[2, 0], [3, 0]], similar: [[3, 6], [3, 7]] }, short: { similar: [0] }, checked: 'subagent' }, // failing to respond to change
+		{ year: 2022, q: '26(a)', verb: 'To what extent', essay: { same: [[4, 0]], similar: [[4, 2]] }, short: { same: [7] }, checked: 'subagent' }, // legal versus non-legal responses
+		{ year: 2022, q: '26(b)', verb: 'Evaluate', essay: { same: [[0, 0], [0, 7]], similar: [[0, 2]] }, checked: 'subagent' }, // cooperation, at least one issue
+		{ year: 2023, q: '26(a)', verb: 'To what extent', essay: { similar: [[4, 4], [4, 5]] }, short: { similar: [3, 9, 10] }, checked: 'subagent' }, // product certification and marketing innovations
+		{ year: 2023, q: '26(b)', verb: 'Assess', essay: { similar: [[4, 0], [4, 2]] }, short: { similar: [5, 7] }, checked: 'subagent' }, // government and non-government organisations
+		{ year: 2024, q: '25(a)', verb: 'Analyse', essay: { similar: [[1, 0], [4, 0], [4, 2]] }, short: { similar: [7] }, checked: 'subagent' }, // state and federal government organisations
+		{ year: 2024, q: '25(b)', verb: 'To what extent', essay: { similar: [[4, 3], [4, 6]] }, short: { similar: [8, 11] }, checked: 'subagent' }, // credit and technology
+		{ year: 2025, q: '25(a)', verb: 'To what extent', essay: { same: [[1, 0]], similar: [[1, 7], [4, 0]] }, checked: 'subagent' }, // non-compliance
+		{ year: 2025, q: '25(b)', verb: 'Assess', essay: { same: [[2, 7]], similar: [[2, 0], [3, 7], [4, 7]] }, checked: 'subagent' } // changing values and just outcomes, a contemporary issue
 	],
 	environment: [
-		{ year: 2015, q: '26(a)', verb: 'To what extent', themes: [3], topics: [0] }, // law reform
-		{ year: 2015, q: '26(b)', verb: 'Assess', themes: [4], topics: [2], learnto: [4] }, // the United Nations
-		{ year: 2016, q: '26(a)', verb: 'To what extent', themes: [0], topics: [0], learnto: [3] }, // state sovereignty and conflict
-		{ year: 2016, q: '26(b)', verb: 'Evaluate', themes: [4], topics: [4], learnto: [8] }, // demand for resources
-		{ year: 2017, q: '26(a)', verb: 'Evaluate', themes: [3], topics: [7] }, // a changing legal system, a contemporary issue
-		{ year: 2017, q: '26(b)', verb: 'Assess', themes: [4], topics: [0], learnto: [6] }, // legal and non-legal measures
-		{ year: 2018, q: '27(a)', verb: 'Evaluate', themes: [2], topics: [0] }, // changing values
-		{ year: 2018, q: '27(b)', verb: 'Discuss', themes: [0], topics: [0], learnto: [3] }, // state sovereignty
-		{ year: 2019, q: '26(a)', verb: 'Evaluate', themes: [4], topics: [2], learnto: [6] }, // international responses
-		{ year: 2019, q: '26(b)', verb: 'Assess', themes: [3], topics: [7] }, // law reform, a contemporary issue
-		{ year: 2020, q: '26(a)', verb: 'Evaluate', themes: [4], topics: [3], learnto: [7] }, // global threats
-		{ year: 2020, q: '26(b)', verb: 'To what extent', themes: [0, 1], topics: [0] }, // cooperation with the law
-		{ year: 2021, q: '27(a)', verb: 'To what extent', themes: [4], topics: [2], learnto: [6] }, // courts and conferences
-		{ year: 2021, q: '27(b)', verb: 'Assess', themes: [2, 3], topics: [0] }, // failing to respond to change
-		{ year: 2022, q: '27(a)', verb: 'To what extent', themes: [4], topics: [0], learnto: [6] }, // legal versus non-legal responses
-		{ year: 2022, q: '27(b)', verb: 'Evaluate', themes: [0], topics: [7] }, // cooperation, at least one issue
-		{ year: 2023, q: '27(a)', verb: 'To what extent', themes: [4], topics: [6], learnto: [10] }, // barriers
-		{ year: 2023, q: '27(b)', verb: 'Assess', themes: [4], topics: [2], learnto: [4] }, // the United Nations and other organisations
-		{ year: 2024, q: '26(a)', verb: 'Analyse', themes: [4], topics: [5], learnto: [5] }, // Australia's federal structure
-		{ year: 2024, q: '26(b)', verb: 'To what extent', themes: [4], topics: [4], learnto: [8] }, // demand for resources
-		{ year: 2025, q: '26(a)', verb: 'To what extent', themes: [1], topics: [0] }, // non-compliance
-		{ year: 2025, q: '26(b)', verb: 'Assess', themes: [2], topics: [7] } // changing values and just outcomes, a contemporary issue
+		{ year: 2015, q: '26(a)', verb: 'To what extent', essay: { same: [[3, 0]], similar: [[2, 0], [3, 2], [3, 3], [3, 7]] }, short: { similar: [1] }, checked: 'subagent' }, // law reform
+		{ year: 2015, q: '26(b)', verb: 'Assess', essay: { similar: [[0, 2], [4, 0], [4, 2]] }, short: { similar: [4, 6] }, checked: 'subagent' }, // the United Nations
+		{ year: 2016, q: '26(a)', verb: 'To what extent', essay: { same: [[0, 0]], similar: [[0, 6], [0, 7], [1, 0]] }, short: { similar: [3, 10] }, checked: 'subagent' }, // state sovereignty and conflict
+		{ year: 2016, q: '26(b)', verb: 'Evaluate', essay: { same: [[4, 4]], similar: [[0, 4], [1, 4], [2, 4], [3, 4]] }, short: { same: [8] }, checked: 'subagent' }, // demand for resources
+		{ year: 2017, q: '26(a)', verb: 'Evaluate', essay: { same: [[3, 7]], similar: [[2, 7], [3, 0], [4, 7]] }, checked: 'subagent' }, // a changing legal system, a contemporary issue
+		{ year: 2017, q: '26(b)', verb: 'Assess', essay: { same: [[4, 0], [4, 2]], similar: [[4, 3], [4, 7]] }, short: { same: [6] }, checked: 'subagent' }, // legal and non-legal measures
+		{ year: 2018, q: '27(a)', verb: 'Evaluate', essay: { same: [[2, 0]], similar: [[2, 2], [2, 4], [2, 7], [3, 0]] }, checked: 'subagent' }, // changing values
+		{ year: 2018, q: '27(b)', verb: 'Discuss', essay: { same: [[0, 0]], similar: [[0, 2], [0, 6], [0, 7]] }, short: { same: [3], similar: [10] }, checked: 'subagent' }, // state sovereignty
+		{ year: 2019, q: '26(a)', verb: 'Evaluate', essay: { same: [[4, 2]], similar: [[0, 2], [1, 2], [4, 0], [4, 6]] }, short: { same: [6], similar: [10] }, checked: 'subagent' }, // international responses
+		{ year: 2019, q: '26(b)', verb: 'Assess', essay: { same: [[3, 0], [3, 7]], similar: [[2, 7], [3, 2], [3, 3]] }, short: { similar: [1] }, checked: 'subagent' }, // law reform, a contemporary issue
+		{ year: 2020, q: '26(a)', verb: 'Evaluate', essay: { same: [[4, 3]], similar: [[0, 3], [1, 3], [3, 3], [4, 7]] }, short: { same: [7] }, checked: 'subagent' }, // global threats
+		{ year: 2020, q: '26(b)', verb: 'To what extent', essay: { same: [[1, 0]], similar: [[0, 0], [0, 6], [1, 6], [1, 7]] }, short: { similar: [3, 10] }, checked: 'subagent' }, // cooperation with the law
+		{ year: 2021, q: '27(a)', verb: 'To what extent', essay: { similar: [[0, 2], [4, 0], [4, 2]] }, short: { similar: [1, 4, 6] }, checked: 'subagent' }, // courts and conferences
+		{ year: 2021, q: '27(b)', verb: 'Assess', essay: { same: [[2, 0], [3, 0]], similar: [[2, 7], [3, 3], [3, 7]] }, short: { similar: [2] }, checked: 'subagent' }, // failing to respond to change
+		{ year: 2022, q: '27(a)', verb: 'To what extent', essay: { same: [[4, 0]], similar: [[4, 2], [4, 3], [4, 7]] }, short: { same: [6] }, checked: 'subagent' }, // legal versus non-legal responses
+		{ year: 2022, q: '27(b)', verb: 'Evaluate', essay: { same: [[0, 0], [0, 7]], similar: [[1, 0], [1, 7]] }, short: { similar: [3, 10] }, checked: 'subagent' }, // cooperation, at least one issue
+		{ year: 2023, q: '27(a)', verb: 'To what extent', essay: { same: [[4, 6]], similar: [[0, 6], [1, 6]] }, short: { similar: [3, 10] }, checked: 'subagent' }, // barriers
+		{ year: 2023, q: '27(b)', verb: 'Assess', essay: { same: [[4, 2]], similar: [[0, 2], [4, 0]] }, short: { similar: [4, 6] }, checked: 'subagent' }, // the United Nations and other organisations
+		{ year: 2024, q: '26(a)', verb: 'Analyse', essay: { similar: [[1, 5], [3, 5], [4, 5]] }, short: { same: [5], similar: [9] }, checked: 'subagent' }, // Australia's federal structure
+		{ year: 2024, q: '26(b)', verb: 'To what extent', essay: { same: [[4, 4]], similar: [[0, 4], [1, 4], [2, 4], [3, 4]] }, short: { same: [8] }, checked: 'subagent' }, // demand for resources
+		{ year: 2025, q: '26(a)', verb: 'To what extent', essay: { same: [[1, 0]], similar: [[0, 0], [1, 3], [1, 6], [1, 7], [4, 0]] }, checked: 'subagent' }, // non-compliance
+		{ year: 2025, q: '26(b)', verb: 'Assess', essay: { same: [[2, 0], [2, 7]], similar: [[2, 4], [3, 7]] }, checked: 'subagent' } // changing values and just outcomes, a contemporary issue
 	],
 	family: [
-		{ year: 2015, q: '27(a)', verb: 'To what extent', themes: [2, 3], topics: [1, 3], learnto: [8] }, // law reform on alternative family relationships
-		{ year: 2015, q: '27(b)', verb: 'Assess', themes: [4], topics: [2], learnto: [5] }, // domestic violence
-		{ year: 2016, q: '27(a)', verb: 'To what extent', themes: [0], topics: [0] }, // cooperation to resolve conflict
-		{ year: 2016, q: '27(b)', verb: 'Evaluate', themes: [4], topics: [5], learnto: [10] }, // birth technologies and surrogacy
-		{ year: 2017, q: '27(a)', verb: 'Evaluate', themes: [3], topics: [7] }, // a changing legal system, a contemporary issue
-		{ year: 2017, q: '27(b)', verb: 'Assess', themes: [4], topics: [0] }, // legal and non-legal measures
-		{ year: 2018, q: '28(a)', verb: 'Evaluate', themes: [2], topics: [0] }, // changes reflecting community values
-		{ year: 2018, q: '28(b)', verb: 'To what extent', themes: [4], topics: [2], learnto: [4] }, // legal processes for problems in relationships
-		{ year: 2019, q: '27(a)', verb: 'Evaluate', themes: [4], topics: [2], learnto: [7] }, // relationship breakdowns
-		{ year: 2019, q: '27(b)', verb: 'Assess', themes: [3], topics: [7] }, // law reform, a contemporary issue
-		{ year: 2020, q: '27(a)', verb: 'Evaluate', themes: [4], topics: [6], learnto: [11] }, // care and protection of children
-		{ year: 2020, q: '27(b)', verb: 'To what extent', themes: [1], topics: [0] }, // compliance
-		{ year: 2021, q: '28(a)', verb: 'To what extent', themes: [4], topics: [2], learnto: [4, 7] }, // courts and dispute resolution
-		{ year: 2021, q: '28(b)', verb: 'Assess', themes: [2, 3], topics: [0] }, // failing to respond to change
-		{ year: 2022, q: '28(a)', verb: 'To what extent', themes: [4], topics: [0] }, // legal versus non-legal responses
-		{ year: 2022, q: '28(b)', verb: 'Evaluate', themes: [0], topics: [7] }, // cooperation, at least one issue
-		{ year: 2023, q: '28(a)', verb: 'To what extent', themes: [2], topics: [4], learnto: [9] }, // changing parental responsibilities
-		{ year: 2023, q: '28(b)', verb: 'Assess', themes: [4], topics: [2], learnto: [5] }, // domestic violence
-		{ year: 2024, q: '27(a)', verb: 'Analyse', themes: [4], topics: [1], learnto: [1] }, // state and federal governments
-		{ year: 2024, q: '27(b)', verb: 'To what extent', themes: [4], topics: [5], learnto: [10] }, // surrogacy and birth technologies
-		{ year: 2025, q: '27(a)', verb: 'To what extent', themes: [1], topics: [0] }, // non-compliance
-		{ year: 2025, q: '27(b)', verb: 'Assess', themes: [2], topics: [7] } // changing values and just outcomes, a contemporary issue
+		{ year: 2015, q: '27(a)', verb: 'To what extent', essay: { same: [[2, 1], [2, 3]], similar: [[2, 0], [3, 1], [3, 3]] }, short: { similar: [0, 8] }, checked: 'subagent' }, // law reform on alternative family relationships
+		{ year: 2015, q: '27(b)', verb: 'Assess', essay: { similar: [[1, 2], [3, 2], [4, 0], [4, 2]] }, short: { same: [5] }, checked: 'subagent' }, // domestic violence
+		{ year: 2016, q: '27(a)', verb: 'To what extent', essay: { same: [[0, 0]], similar: [[0, 2]] }, short: { similar: [4] }, checked: 'subagent' }, // cooperation to resolve conflict
+		{ year: 2016, q: '27(b)', verb: 'Evaluate', essay: { same: [[4, 5]], similar: [[1, 5], [2, 5], [3, 5]] }, short: { same: [10] }, checked: 'subagent' }, // birth technologies and surrogacy
+		{ year: 2017, q: '27(a)', verb: 'Evaluate', essay: { same: [[3, 7]], similar: [[2, 7], [3, 0], [3, 3], [3, 4], [3, 5], [3, 6], [4, 7]] }, checked: 'subagent' }, // a changing legal system, a contemporary issue
+		{ year: 2017, q: '27(b)', verb: 'Assess', essay: { same: [[4, 0]], similar: [[3, 0], [4, 2], [4, 7]] }, checked: 'subagent' }, // legal and non-legal measures
+		{ year: 2018, q: '28(a)', verb: 'Evaluate', essay: { same: [[2, 0]], similar: [[2, 1], [2, 3], [2, 7], [3, 0]] }, short: { similar: [0] }, checked: 'subagent' }, // changes reflecting community values
+		{ year: 2018, q: '28(b)', verb: 'To what extent', essay: { same: [[4, 2]], similar: [[0, 2], [4, 0]] }, short: { similar: [4, 5, 7] }, checked: 'subagent' }, // legal processes for problems in relationships
+		{ year: 2019, q: '27(a)', verb: 'Evaluate', essay: { same: [[4, 2]], similar: [[0, 2], [4, 0]] }, short: { same: [7], similar: [4] }, checked: 'subagent' }, // relationship breakdowns
+		{ year: 2019, q: '27(b)', verb: 'Assess', essay: { same: [[3, 0], [3, 7]], similar: [[2, 7], [3, 3], [3, 4], [3, 5], [3, 6], [4, 7]] }, checked: 'subagent' }, // law reform, a contemporary issue
+		{ year: 2020, q: '27(a)', verb: 'Evaluate', essay: { same: [[4, 6]], similar: [[2, 6], [3, 6]] }, short: { same: [11], similar: [3] }, checked: 'subagent' }, // care and protection of children
+		{ year: 2020, q: '27(b)', verb: 'To what extent', essay: { same: [[1, 0]], similar: [[1, 2], [1, 5], [1, 7]] }, checked: 'subagent' }, // compliance
+		{ year: 2021, q: '28(a)', verb: 'To what extent', essay: { same: [[4, 2]], similar: [[0, 0], [0, 2], [4, 0]] }, short: { similar: [4, 7] }, checked: 'subagent' }, // courts and dispute resolution
+		{ year: 2021, q: '28(b)', verb: 'Assess', essay: { same: [[2, 0], [3, 0]], similar: [[2, 6], [3, 2], [3, 6]] }, short: { similar: [5, 11] }, checked: 'subagent' }, // failing to respond to change
+		{ year: 2022, q: '28(a)', verb: 'To what extent', essay: { same: [[4, 0]], similar: [[4, 2], [4, 7]] }, short: { similar: [6] }, checked: 'subagent' }, // legal versus non-legal responses
+		{ year: 2022, q: '28(b)', verb: 'Evaluate', essay: { same: [[0, 0], [0, 7]], similar: [[0, 2]] }, short: { similar: [4] }, checked: 'subagent' }, // cooperation, at least one issue
+		{ year: 2023, q: '28(a)', verb: 'To what extent', essay: { same: [[2, 4]], similar: [[3, 4], [4, 4]] }, short: { similar: [3, 9] }, checked: 'subagent' }, // changing parental responsibilities
+		{ year: 2023, q: '28(b)', verb: 'Assess', essay: { similar: [[1, 2], [3, 2], [4, 2]] }, short: { same: [5] }, checked: 'subagent' }, // domestic violence
+		{ year: 2024, q: '27(a)', verb: 'Analyse', essay: { similar: [[4, 0], [4, 1]] }, short: { similar: [1, 3] }, checked: 'subagent' }, // state and federal governments
+		{ year: 2024, q: '27(b)', verb: 'To what extent', essay: { same: [[4, 5]], similar: [[1, 5], [2, 5], [3, 5]] }, short: { same: [10] }, checked: 'subagent' }, // surrogacy and birth technologies
+		{ year: 2025, q: '27(a)', verb: 'To what extent', essay: { same: [[1, 0]], similar: [[1, 2], [1, 5], [1, 7], [4, 0]] }, checked: 'subagent' }, // non-compliance
+		{ year: 2025, q: '27(b)', verb: 'Assess', essay: { same: [[2, 7]], similar: [[2, 0], [2, 3], [2, 4], [2, 5], [2, 6], [3, 7]] }, checked: 'subagent' } // changing values and just outcomes, a contemporary issue
 	],
 	indigenous: [
-		{ year: 2015, q: '28(a)', verb: 'To what extent', themes: [0], topics: [0, 2], learnto: [4] }, // state sovereignty and recognition of rights
-		{ year: 2015, q: '28(b)', verb: 'To what extent', themes: [2], topics: [0] }, // changing values
-		{ year: 2016, q: '28(a)', verb: 'To what extent', themes: [0], topics: [0], learnto: [4] }, // state sovereignty and conflict
-		{ year: 2016, q: '28(b)', verb: 'Evaluate', themes: [4], topics: [4], learnto: [8] }, // land rights
-		{ year: 2017, q: '28(a)', verb: 'Evaluate', themes: [3], topics: [7] }, // a changing legal system, a contemporary issue
-		{ year: 2017, q: '28(b)', verb: 'Assess', themes: [4], topics: [0], learnto: [5] }, // legal and non-legal measures
-		{ year: 2018, q: '29(a)', verb: 'Evaluate', themes: [2], topics: [0] }, // changing values
-		{ year: 2018, q: '29(b)', verb: 'To what extent', themes: [4], topics: [0, 2], learnto: [3] }, // determining their own future
-		{ year: 2019, q: '28(a)', verb: 'Evaluate', themes: [4], topics: [2], learnto: [5] }, // international responses
-		{ year: 2019, q: '28(b)', verb: 'Assess', themes: [3], topics: [7] }, // law reform, a contemporary issue
-		{ year: 2020, q: '28(a)', verb: 'Evaluate', themes: [4], topics: [3], learnto: [7] }, // loss of cultural rights
-		{ year: 2020, q: '28(b)', verb: 'To what extent', themes: [0, 1], topics: [0] }, // cooperation with the law
-		{ year: 2021, q: '29(a)', verb: 'To what extent', themes: [4], topics: [2], learnto: [5] }, // courts and the United Nations
-		{ year: 2021, q: '29(b)', verb: 'Assess', themes: [2, 3], topics: [0] }, // failing to respond to change
-		{ year: 2022, q: '29(a)', verb: 'To what extent', themes: [4], topics: [0], learnto: [5] }, // legal versus non-legal responses
-		{ year: 2022, q: '29(b)', verb: 'Evaluate', themes: [0], topics: [7] }, // cooperation, at least one issue
-		{ year: 2023, q: '29(a)', verb: 'To what extent', themes: [4], topics: [4, 5], learnto: [8, 9] }, // land and natural resources
-		{ year: 2023, q: '29(b)', verb: 'Assess', themes: [4], topics: [2], learnto: [5] }, // the United Nations and courts
-		{ year: 2024, q: '28(a)', verb: 'Analyse', themes: [4], topics: [2], learnto: [6] }, // Australia's federal structure
-		{ year: 2024, q: '28(b)', verb: 'To what extent', themes: [4], topics: [3, 6], learnto: [7, 10] }, // intellectual property and cultural rights
-		{ year: 2025, q: '28(a)', verb: 'To what extent', themes: [1], topics: [0] }, // non-compliance
-		{ year: 2025, q: '28(b)', verb: 'Assess', themes: [2], topics: [7] } // changing values and just outcomes, a contemporary issue
+		{ year: 2015, q: '28(a)', verb: 'To what extent', essay: { same: [[0, 0]], similar: [[0, 2], [3, 0]] }, short: { similar: [4] }, checked: 'subagent' }, // state sovereignty and recognition of rights
+		{ year: 2015, q: '28(b)', verb: 'To what extent', essay: { same: [[2, 0]], similar: [[2, 1], [2, 2], [2, 7], [3, 0]] }, checked: 'subagent' }, // changing values
+		{ year: 2016, q: '28(a)', verb: 'To what extent', essay: { same: [[0, 0]], similar: [[0, 2], [0, 7]] }, short: { similar: [4] }, checked: 'subagent' }, // state sovereignty and conflict
+		{ year: 2016, q: '28(b)', verb: 'Evaluate', essay: { same: [[4, 4]], similar: [[3, 4], [4, 5]] }, short: { same: [8], similar: [9] }, checked: 'subagent' }, // land rights
+		{ year: 2017, q: '28(a)', verb: 'Evaluate', essay: { same: [[3, 7]], similar: [[2, 7], [3, 0], [4, 7]] }, checked: 'subagent' }, // a changing legal system, a contemporary issue
+		{ year: 2017, q: '28(b)', verb: 'Assess', essay: { same: [[4, 0]], similar: [[4, 2]] }, short: { same: [5] }, checked: 'subagent' }, // legal and non-legal measures
+		{ year: 2018, q: '29(a)', verb: 'Evaluate', essay: { same: [[2, 0]], similar: [[2, 1], [2, 2], [2, 7], [3, 0]] }, checked: 'subagent' }, // changing values
+		{ year: 2018, q: '29(b)', verb: 'To what extent', essay: { same: [[4, 2]], similar: [[0, 2], [4, 0]] }, short: { similar: [3, 5] }, checked: 'subagent' }, // determining their own future
+		{ year: 2019, q: '28(a)', verb: 'Evaluate', essay: { same: [[4, 2]], similar: [[0, 0], [0, 2], [4, 0]] }, short: { similar: [4, 5] }, checked: 'subagent' }, // international responses
+		{ year: 2019, q: '28(b)', verb: 'Assess', essay: { same: [[3, 0], [3, 7]], similar: [[2, 7]] }, short: { similar: [2] }, checked: 'subagent' }, // law reform, a contemporary issue
+		{ year: 2020, q: '28(a)', verb: 'Evaluate', essay: { same: [[4, 3]], similar: [[3, 3], [4, 6]] }, short: { same: [7], similar: [10] }, checked: 'subagent' }, // loss of cultural rights
+		{ year: 2020, q: '28(b)', verb: 'To what extent', essay: { same: [[1, 0]], similar: [[0, 0], [1, 2], [1, 7]] }, short: { similar: [4] }, checked: 'subagent' }, // cooperation with the law
+		{ year: 2021, q: '29(a)', verb: 'To what extent', essay: { same: [[4, 2]], similar: [[0, 2], [4, 0]] }, short: { similar: [5] }, checked: 'subagent' }, // courts and the United Nations
+		{ year: 2021, q: '29(b)', verb: 'Assess', essay: { same: [[2, 0], [3, 0]], similar: [[2, 3], [3, 3]] }, short: { similar: [1] }, checked: 'subagent' }, // failing to respond to change
+		{ year: 2022, q: '29(a)', verb: 'To what extent', essay: { same: [[4, 0]], similar: [[4, 2]] }, short: { similar: [5] }, checked: 'subagent' }, // legal versus non-legal responses
+		{ year: 2022, q: '29(b)', verb: 'Evaluate', essay: { same: [[0, 7]], similar: [[0, 0], [1, 7], [4, 7]] }, checked: 'subagent' }, // cooperation, at least one issue
+		{ year: 2023, q: '29(a)', verb: 'To what extent', essay: { same: [[4, 4], [4, 5]], similar: [[3, 4], [3, 5]] }, short: { similar: [8, 9] }, checked: 'subagent' }, // land and natural resources
+		{ year: 2023, q: '29(b)', verb: 'Assess', essay: { same: [[4, 2]], similar: [[0, 2], [4, 0]] }, short: { similar: [5] }, checked: 'subagent' }, // the United Nations and courts
+		{ year: 2024, q: '28(a)', verb: 'Analyse', essay: { similar: [[4, 2]] }, short: { same: [6] }, checked: 'subagent' }, // Australia's federal structure
+		{ year: 2024, q: '28(b)', verb: 'To what extent', essay: { same: [[4, 3], [4, 6]], similar: [[3, 3], [3, 6]] }, short: { similar: [7, 10] }, checked: 'subagent' }, // intellectual property and cultural rights
+		{ year: 2025, q: '28(a)', verb: 'To what extent', essay: { same: [[1, 0]], similar: [[0, 0], [1, 2], [1, 7], [4, 0]] }, checked: 'subagent' }, // non-compliance
+		{ year: 2025, q: '28(b)', verb: 'Assess', essay: { same: [[2, 0], [2, 7]], similar: [[3, 7], [4, 7]] }, checked: 'subagent' } // changing values and just outcomes, a contemporary issue
 	],
 	shelter: [
-		{ year: 2015, q: '29(a)', verb: 'To what extent', themes: [0], topics: [2], learnto: [5] }, // dispute resolution mechanisms
-		{ year: 2015, q: '29(b)', verb: 'To what extent', themes: [4], topics: [2], learnto: [5] }, // purchasing and selling shelter
-		{ year: 2016, q: '29(a)', verb: 'To what extent', themes: [0], topics: [0] }, // cooperation to resolve conflict
-		{ year: 2016, q: '29(b)', verb: 'Evaluate', themes: [4], topics: [6], learnto: [10] }, // social housing
-		{ year: 2017, q: '29(a)', verb: 'Evaluate', themes: [3], topics: [7] }, // a changing legal system, a contemporary issue
-		{ year: 2017, q: '29(b)', verb: 'Assess', themes: [4], topics: [0], learnto: [6] }, // legal and non-legal measures
-		{ year: 2018, q: '30(a)', verb: 'Evaluate', themes: [2], topics: [0] }, // changes reflecting values
-		{ year: 2018, q: '30(b)', verb: 'To what extent', themes: [4], topics: [2], learnto: [5] }, // protecting those securing and providing shelter
-		{ year: 2019, q: '29(a)', verb: 'Evaluate', themes: [4], topics: [2], learnto: [6] }, // legal protection and remedies
-		{ year: 2019, q: '29(b)', verb: 'Assess', themes: [3], topics: [7] }, // law reform, a contemporary issue
-		{ year: 2020, q: '29(a)', verb: 'Evaluate', themes: [4], topics: [3], learnto: [7] }, // affordability
-		{ year: 2020, q: '29(b)', verb: 'To what extent', themes: [1], topics: [0] }, // compliance
-		{ year: 2021, q: '30(a)', verb: 'To what extent', themes: [4], topics: [2], learnto: [6] }, // courts and tribunals
-		{ year: 2021, q: '30(b)', verb: 'Assess', themes: [2, 3], topics: [0] }, // failing to respond to change
-		{ year: 2022, q: '30(a)', verb: 'To what extent', themes: [4], topics: [0], learnto: [6] }, // legal versus non-legal responses
-		{ year: 2022, q: '30(b)', verb: 'Evaluate', themes: [0], topics: [7] }, // cooperation, at least one issue
-		{ year: 2023, q: '30(a)', verb: 'To what extent', themes: [4], topics: [4, 5], learnto: [8, 9] }, // discrimination and homelessness
-		{ year: 2023, q: '30(b)', verb: 'Assess', themes: [0, 4], topics: [2], learnto: [5] }, // dispute resolution mechanisms
-		{ year: 2024, q: '29(a)', verb: 'Analyse', themes: [4], topics: [1], learnto: [2] }, // state and federal governments
-		{ year: 2024, q: '29(b)', verb: 'To what extent', themes: [4], topics: [3, 6], learnto: [7, 10] }, // affordability and social housing
-		{ year: 2025, q: '29(a)', verb: 'To what extent', themes: [1], topics: [0] }, // non-compliance
-		{ year: 2025, q: '29(b)', verb: 'Assess', themes: [2], topics: [7] } // changing values and just outcomes, a contemporary issue
+		{ year: 2015, q: '29(a)', verb: 'To what extent', essay: { same: [[0, 0], [0, 2]], similar: [[4, 2]] }, short: { similar: [5] }, checked: 'subagent' }, // dispute resolution mechanisms
+		{ year: 2015, q: '29(b)', verb: 'To what extent', essay: { same: [[4, 2]], similar: [[4, 0]] }, short: { similar: [4, 5, 6] }, checked: 'subagent' }, // purchasing and selling shelter
+		{ year: 2016, q: '29(a)', verb: 'To what extent', essay: { same: [[0, 0]], similar: [[0, 2], [0, 7]] }, short: { similar: [5] }, checked: 'subagent' }, // cooperation to resolve conflict
+		{ year: 2016, q: '29(b)', verb: 'Evaluate', essay: { same: [[4, 6]], similar: [[3, 6], [4, 0]] }, short: { same: [10], similar: [2] }, checked: 'subagent' }, // social housing
+		{ year: 2017, q: '29(a)', verb: 'Evaluate', essay: { same: [[3, 7]], similar: [[2, 7], [3, 0], [4, 7]] }, checked: 'subagent' }, // a changing legal system, a contemporary issue
+		{ year: 2017, q: '29(b)', verb: 'Assess', essay: { same: [[4, 0]], similar: [[4, 7]] }, short: { same: [6], similar: [5] }, checked: 'subagent' }, // legal and non-legal measures
+		{ year: 2018, q: '30(a)', verb: 'Evaluate', essay: { same: [[2, 0]], similar: [[2, 7], [3, 0]] }, checked: 'subagent' }, // changes reflecting values
+		{ year: 2018, q: '30(b)', verb: 'To what extent', essay: { same: [[4, 2]], similar: [[3, 2], [4, 0]] }, short: { same: [5], similar: [6] }, checked: 'subagent' }, // protecting those securing and providing shelter
+		{ year: 2019, q: '29(a)', verb: 'Evaluate', essay: { same: [[4, 2]], similar: [[3, 2]] }, short: { same: [5], similar: [4, 6] }, checked: 'subagent' }, // legal protection and remedies
+		{ year: 2019, q: '29(b)', verb: 'Assess', essay: { same: [[3, 0], [3, 7]], similar: [[2, 0], [2, 7]] }, checked: 'subagent' }, // law reform, a contemporary issue
+		{ year: 2020, q: '29(a)', verb: 'Evaluate', essay: { same: [[4, 3]], similar: [[3, 3], [4, 6]] }, short: { same: [7], similar: [10] }, checked: 'subagent' }, // affordability
+		{ year: 2020, q: '29(b)', verb: 'To what extent', essay: { same: [[1, 0]], similar: [[1, 2], [1, 7]] }, checked: 'subagent' }, // compliance
+		{ year: 2021, q: '30(a)', verb: 'To what extent', essay: { same: [[4, 2]], similar: [[0, 2], [4, 0]] }, short: { similar: [5, 6] }, checked: 'subagent' }, // courts and tribunals
+		{ year: 2021, q: '30(b)', verb: 'Assess', essay: { same: [[2, 0], [3, 0]], similar: [[2, 7], [3, 7]] }, checked: 'subagent' }, // failing to respond to change
+		{ year: 2022, q: '30(a)', verb: 'To what extent', essay: { same: [[4, 0]], similar: [[4, 7]] }, short: { same: [6] }, checked: 'subagent' }, // legal versus non-legal responses
+		{ year: 2022, q: '30(b)', verb: 'Evaluate', essay: { same: [[0, 0], [0, 7]], similar: [[0, 2]] }, checked: 'subagent' }, // cooperation, at least one issue
+		{ year: 2023, q: '30(a)', verb: 'To what extent', essay: { same: [[4, 4], [4, 5]] }, short: { similar: [8, 9] }, checked: 'subagent' }, // discrimination and homelessness
+		{ year: 2023, q: '30(b)', verb: 'Assess', essay: { same: [[0, 2], [4, 2]], similar: [[0, 0]] }, short: { same: [5], similar: [6] }, checked: 'subagent' }, // dispute resolution mechanisms
+		{ year: 2024, q: '29(a)', verb: 'Analyse', essay: { similar: [[3, 1], [4, 1], [4, 6]] }, short: { same: [2], similar: [1] }, checked: 'subagent' }, // state and federal governments
+		{ year: 2024, q: '29(b)', verb: 'To what extent', essay: { same: [[4, 3], [4, 6]] }, short: { similar: [7, 10] }, checked: 'subagent' }, // affordability and social housing
+		{ year: 2025, q: '29(a)', verb: 'To what extent', essay: { same: [[1, 0]], similar: [[1, 2], [1, 7], [4, 0]] }, checked: 'subagent' }, // non-compliance
+		{ year: 2025, q: '29(b)', verb: 'Assess', essay: { same: [[2, 7]], similar: [[2, 0], [3, 7], [4, 7]] }, checked: 'subagent' } // changing values and just outcomes, a contemporary issue
 	],
 	workplace: [
-		{ year: 2015, q: '30(a)', verb: 'To what extent', themes: [3], topics: [3], learnto: [8] }, // law reform and discrimination
-		{ year: 2015, q: '30(b)', verb: 'Assess', themes: [4], topics: [2], learnto: [7] }, // trade unions
-		{ year: 2016, q: '30(a)', verb: 'To what extent', themes: [0], topics: [0], learnto: [4] }, // cooperation to resolve conflict
-		{ year: 2016, q: '30(b)', verb: 'Evaluate', themes: [4], topics: [5], learnto: [10] }, // termination of employment
-		{ year: 2017, q: '30(a)', verb: 'Evaluate', themes: [3], topics: [7] }, // a changing legal system, a contemporary issue
-		{ year: 2017, q: '30(b)', verb: 'Assess', themes: [4], topics: [0], learnto: [7] }, // legal and non-legal measures
-		{ year: 2018, q: '31(a)', verb: 'Evaluate', themes: [2], topics: [0] }, // changes reflecting values
-		{ year: 2018, q: '31(b)', verb: 'To what extent', themes: [0], topics: [2], learnto: [4] }, // resolving disputes
-		{ year: 2019, q: '30(a)', verb: 'Evaluate', themes: [4], topics: [2], learnto: [7] }, // regulation of the workplace
-		{ year: 2019, q: '30(b)', verb: 'Assess', themes: [3], topics: [7] }, // law reform, a contemporary issue
-		{ year: 2020, q: '30(a)', verb: 'Evaluate', themes: [4], topics: [4], learnto: [9] }, // workplace safety
-		{ year: 2020, q: '30(b)', verb: 'To what extent', themes: [1], topics: [0] }, // compliance
-		{ year: 2021, q: '31(a)', verb: 'To what extent', themes: [4], topics: [2], learnto: [4] }, // courts and tribunals
-		{ year: 2021, q: '31(b)', verb: 'Assess', themes: [2, 3], topics: [0] }, // failing to respond to change
-		{ year: 2022, q: '31(a)', verb: 'To what extent', themes: [4], topics: [0], learnto: [7] }, // legal versus non-legal responses
-		{ year: 2022, q: '31(b)', verb: 'Evaluate', themes: [0], topics: [7] }, // cooperation, at least one issue
-		{ year: 2023, q: '31(a)', verb: 'To what extent', themes: [4], topics: [3], learnto: [8] }, // discrimination
-		{ year: 2023, q: '31(b)', verb: 'Assess', themes: [0, 4], topics: [2], learnto: [4] }, // dispute resolution mechanisms
-		{ year: 2024, q: '30(a)', verb: 'Analyse', themes: [4], topics: [2], learnto: [3] }, // state and federal governments
-		{ year: 2024, q: '30(b)', verb: 'To what extent', themes: [4], topics: [5, 6], learnto: [10, 11] }, // leave and termination of employment
-		{ year: 2025, q: '30(a)', verb: 'To what extent', themes: [1], topics: [0] }, // non-compliance
-		{ year: 2025, q: '30(b)', verb: 'Assess', themes: [2], topics: [7] } // changing values and just outcomes, a contemporary issue
+		{ year: 2015, q: '30(a)', verb: 'To what extent', essay: { same: [[3, 3]], similar: [[2, 3], [3, 0], [4, 3]] }, short: { similar: [8] }, checked: 'subagent' }, // law reform and discrimination
+		{ year: 2015, q: '30(b)', verb: 'Assess', essay: { similar: [[0, 2], [4, 2]] }, short: { similar: [7] }, checked: 'subagent' }, // trade unions
+		{ year: 2016, q: '30(a)', verb: 'To what extent', essay: { same: [[0, 0]], similar: [[0, 2], [0, 7]] }, short: { similar: [4] }, checked: 'subagent' }, // cooperation to resolve conflict
+		{ year: 2016, q: '30(b)', verb: 'Evaluate', essay: { same: [[4, 5]], similar: [[0, 5], [1, 5], [3, 5]] }, short: { same: [10] }, checked: 'subagent' }, // termination of employment
+		{ year: 2017, q: '30(a)', verb: 'Evaluate', essay: { same: [[3, 7]], similar: [[2, 7], [3, 0], [4, 7]] }, checked: 'subagent' }, // a changing legal system, a contemporary issue
+		{ year: 2017, q: '30(b)', verb: 'Assess', essay: { same: [[4, 0]], similar: [[4, 2], [4, 3], [4, 4], [4, 5], [4, 6], [4, 7]] }, short: { similar: [7] }, checked: 'subagent' }, // legal and non-legal measures
+		{ year: 2018, q: '31(a)', verb: 'Evaluate', essay: { same: [[2, 0]], similar: [[2, 1], [2, 3], [2, 7], [3, 0]] }, short: { similar: [0] }, checked: 'subagent' }, // changes reflecting values
+		{ year: 2018, q: '31(b)', verb: 'To what extent', essay: { same: [[0, 0], [0, 2]], similar: [[0, 7]] }, short: { same: [4] }, checked: 'subagent' }, // resolving disputes
+		{ year: 2019, q: '30(a)', verb: 'Evaluate', essay: { same: [[4, 2]], similar: [[3, 2], [4, 0]] }, short: { same: [7], similar: [3, 5] }, checked: 'subagent' }, // regulation of the workplace
+		{ year: 2019, q: '30(b)', verb: 'Assess', essay: { same: [[3, 0], [3, 7]], similar: [[2, 7], [3, 3], [3, 5]] }, checked: 'subagent' }, // law reform, a contemporary issue
+		{ year: 2020, q: '30(a)', verb: 'Evaluate', essay: { same: [[4, 4]], similar: [[0, 4], [1, 4], [3, 4]] }, short: { same: [9] }, checked: 'subagent' }, // workplace safety
+		{ year: 2020, q: '30(b)', verb: 'To what extent', essay: { same: [[1, 0]], similar: [[1, 2], [1, 3], [1, 4], [1, 7]] }, short: { similar: [5] }, checked: 'subagent' }, // compliance
+		{ year: 2021, q: '31(a)', verb: 'To what extent', essay: { similar: [[0, 2], [4, 0], [4, 2]] }, short: { similar: [4, 5] }, checked: 'subagent' }, // courts and tribunals
+		{ year: 2021, q: '31(b)', verb: 'Assess', essay: { same: [[2, 0], [3, 0]], similar: [[2, 1], [2, 7], [3, 7]] }, short: { similar: [0] }, checked: 'subagent' }, // failing to respond to change
+		{ year: 2022, q: '31(a)', verb: 'To what extent', essay: { same: [[4, 0]], similar: [[4, 2], [4, 3], [4, 4], [4, 5], [4, 6], [4, 7]] }, short: { similar: [7] }, checked: 'subagent' }, // legal versus non-legal responses
+		{ year: 2022, q: '31(b)', verb: 'Evaluate', essay: { same: [[0, 0], [0, 7]], similar: [[0, 2], [0, 3], [0, 4], [0, 5]] }, short: { similar: [4] }, checked: 'subagent' }, // cooperation, at least one issue
+		{ year: 2023, q: '31(a)', verb: 'To what extent', essay: { same: [[4, 3]], similar: [[0, 3], [1, 3], [2, 3], [3, 3]] }, short: { same: [8] }, checked: 'subagent' }, // discrimination
+		{ year: 2023, q: '31(b)', verb: 'Assess', essay: { same: [[0, 0], [0, 2]], similar: [[4, 0], [4, 2]] }, short: { same: [4] }, checked: 'subagent' }, // dispute resolution mechanisms
+		{ year: 2024, q: '30(a)', verb: 'Analyse', essay: { similar: [[3, 2], [4, 2]] }, short: { similar: [1, 3, 5, 7] }, checked: 'subagent' }, // state and federal governments
+		{ year: 2024, q: '30(b)', verb: 'To what extent', essay: { similar: [[4, 5], [4, 6]] }, short: { similar: [10, 11] }, checked: 'subagent' }, // leave and termination of employment
+		{ year: 2025, q: '30(a)', verb: 'To what extent', essay: { same: [[1, 0]], similar: [[1, 2], [1, 3], [1, 4], [1, 7]] }, checked: 'subagent' }, // non-compliance
+		{ year: 2025, q: '30(b)', verb: 'Assess', essay: { same: [[2, 7]], similar: [[2, 0], [3, 7], [4, 7]] }, checked: 'subagent' } // changing values and just outcomes, a contemporary issue
 	],
 	worldorder: [
-		{ year: 2015, q: '31(a)', verb: 'To what extent', themes: [4], topics: [2], learnto: [6] }, // political negotiation and force
-		{ year: 2015, q: '31(b)', verb: 'Assess', themes: [4], topics: [2], learnto: [6] }, // the United Nations
-		{ year: 2016, q: '31(a)', verb: 'To what extent', themes: [0], topics: [0] }, // cooperation to achieve world order
-		{ year: 2016, q: '31(b)', verb: 'Evaluate', themes: [4], topics: [3], learnto: [4, 7] }, // state sovereignty and the responsibility to protect
-		{ year: 2017, q: '31(a)', verb: 'Evaluate', themes: [3], topics: [7] }, // a changing legal system, a contemporary issue
-		{ year: 2017, q: '31(b)', verb: 'Assess', themes: [4], topics: [0], learnto: [6] }, // legal and non-legal measures
-		{ year: 2018, q: '32(a)', verb: 'Evaluate', themes: [2], topics: [0] }, // changing values
-		{ year: 2018, q: '32(b)', verb: 'Analyse', themes: [1], topics: [0] }, // compliance and non-compliance
-		{ year: 2019, q: '31(a)', verb: 'Evaluate', themes: [4], topics: [2], learnto: [6] }, // international responses
-		{ year: 2019, q: '31(b)', verb: 'Assess', themes: [3], topics: [7] }, // law reform, a contemporary issue
-		{ year: 2020, q: '31(a)', verb: 'Evaluate', themes: [4], topics: [6], learnto: [10] }, // conduct of hostilities
-		{ year: 2020, q: '31(b)', verb: 'To what extent', themes: [0, 1], topics: [0] }, // cooperation with the law
-		{ year: 2021, q: '32(a)', verb: 'To what extent', themes: [4], topics: [2], learnto: [6] }, // courts and tribunals
-		{ year: 2021, q: '32(b)', verb: 'Assess', themes: [2, 3], topics: [0] }, // failing to respond to change
-		{ year: 2022, q: '32(a)', verb: 'To what extent', themes: [4], topics: [0], learnto: [6] }, // legal versus non-legal responses
-		{ year: 2022, q: '32(b)', verb: 'Evaluate', themes: [0], topics: [7] }, // cooperation, at least one issue
-		{ year: 2023, q: '32(a)', verb: 'How effective', themes: [4], topics: [4], learnto: [8] }, // regional and global situations
-		{ year: 2023, q: '32(b)', verb: 'Assess', themes: [0, 4], topics: [2], learnto: [6] }, // the United Nations
-		{ year: 2024, q: '31(a)', verb: 'Analyse', themes: [4], topics: [2], learnto: [5] }, // Australia's federal government
-		{ year: 2024, q: '31(b)', verb: 'To what extent', themes: [4], topics: [3, 6], learnto: [7, 10] }, // responsibility to protect and conduct of hostilities
-		{ year: 2025, q: '31(a)', verb: 'To what extent', themes: [1], topics: [0] }, // non-compliance
-		{ year: 2025, q: '31(b)', verb: 'Assess', themes: [2], topics: [7] } // changing values and just outcomes, a contemporary issue
+		{ year: 2015, q: '31(a)', verb: 'To what extent', essay: { same: [[4, 2]], similar: [[0, 2], [4, 0]] }, short: { similar: [6] }, checked: 'subagent' }, // political negotiation and force
+		{ year: 2015, q: '31(b)', verb: 'Assess', essay: { same: [[4, 2]], similar: [[0, 2], [4, 0], [4, 5]] }, short: { similar: [6, 9] }, checked: 'subagent' }, // the United Nations
+		{ year: 2016, q: '31(a)', verb: 'To what extent', essay: { same: [[0, 0]], similar: [[0, 2], [0, 5], [1, 0]] }, short: { similar: [9] }, checked: 'subagent' }, // cooperation to achieve world order
+		{ year: 2016, q: '31(b)', verb: 'Evaluate', essay: { same: [[4, 3]], similar: [[2, 3], [3, 3]] }, short: { same: [7], similar: [4] }, checked: 'subagent' }, // state sovereignty and the responsibility to protect
+		{ year: 2017, q: '31(a)', verb: 'Evaluate', essay: { same: [[3, 7]], similar: [[2, 7], [3, 0]] }, short: { similar: [1] }, checked: 'subagent' }, // a changing legal system, a contemporary issue
+		{ year: 2017, q: '31(b)', verb: 'Assess', essay: { same: [[4, 0], [4, 2]], similar: [[0, 0], [4, 5]] }, short: { same: [6] }, checked: 'subagent' }, // legal and non-legal measures
+		{ year: 2018, q: '32(a)', verb: 'Evaluate', essay: { same: [[2, 0]], similar: [[0, 0], [2, 3], [2, 4], [2, 7]] }, checked: 'subagent' }, // changing values
+		{ year: 2018, q: '32(b)', verb: 'Analyse', essay: { same: [[1, 0]], similar: [[1, 2], [1, 4], [1, 6]] }, short: { similar: [4] }, checked: 'subagent' }, // compliance and non-compliance
+		{ year: 2019, q: '31(a)', verb: 'Evaluate', essay: { same: [[4, 0], [4, 2]], similar: [[0, 2], [4, 4]] }, short: { same: [6], similar: [8, 9] }, checked: 'subagent' }, // international responses
+		{ year: 2019, q: '31(b)', verb: 'Assess', essay: { same: [[3, 0], [3, 7]], similar: [[2, 0], [3, 2], [3, 3]] }, checked: 'subagent' }, // law reform, a contemporary issue
+		{ year: 2020, q: '31(a)', verb: 'Evaluate', essay: { same: [[4, 6]], similar: [[1, 6], [2, 6], [3, 6]] }, short: { same: [10] }, checked: 'subagent' }, // conduct of hostilities
+		{ year: 2020, q: '31(b)', verb: 'To what extent', essay: { same: [[0, 0], [1, 0]], similar: [[0, 5], [1, 2]] }, short: { similar: [4, 9] }, checked: 'subagent' }, // cooperation with the law
+		{ year: 2021, q: '32(a)', verb: 'To what extent', essay: { similar: [[1, 0], [4, 0], [4, 2], [4, 6]] }, short: { similar: [6] }, checked: 'subagent' }, // courts and tribunals
+		{ year: 2021, q: '32(b)', verb: 'Assess', essay: { same: [[2, 0], [3, 0]], similar: [[0, 0], [2, 7], [3, 7]] }, short: { similar: [1] }, checked: 'subagent' }, // failing to respond to change
+		{ year: 2022, q: '32(a)', verb: 'To what extent', essay: { same: [[4, 0], [4, 2]], similar: [[4, 4]] }, short: { similar: [6] }, checked: 'subagent' }, // legal versus non-legal responses
+		{ year: 2022, q: '32(b)', verb: 'Evaluate', essay: { same: [[0, 0], [0, 7]], similar: [[0, 4], [0, 5], [4, 7]] }, short: { similar: [9] }, checked: 'subagent' }, // cooperation, at least one issue
+		{ year: 2023, q: '32(a)', verb: 'How effective', essay: { same: [[4, 4]], similar: [[0, 4], [1, 4], [3, 4], [4, 2]] }, short: { same: [8] }, checked: 'subagent' }, // regional and global situations
+		{ year: 2023, q: '32(b)', verb: 'Assess', essay: { same: [[0, 2]], similar: [[0, 0], [0, 5], [4, 2]] }, short: { similar: [6, 9] }, checked: 'subagent' }, // the United Nations
+		{ year: 2024, q: '31(a)', verb: 'Analyse', essay: { similar: [[0, 2], [4, 2]] }, short: { same: [5] }, checked: 'subagent' }, // Australia's federal government
+		{ year: 2024, q: '31(b)', verb: 'To what extent', essay: { similar: [[4, 3], [4, 6]] }, short: { similar: [7, 10] }, checked: 'subagent' }, // responsibility to protect and conduct of hostilities
+		{ year: 2025, q: '31(a)', verb: 'To what extent', essay: { same: [[1, 0]], similar: [[1, 2], [1, 4], [1, 6], [4, 0]] }, short: { similar: [4] }, checked: 'subagent' }, // non-compliance
+		{ year: 2025, q: '31(b)', verb: 'Assess', essay: { same: [[2, 0], [2, 7]], similar: [[2, 3], [2, 4], [3, 7]] }, checked: 'subagent' } // changing values and just outcomes, a contemporary issue
 	]
 };
 
@@ -758,16 +761,36 @@ function shortQuestion(verb, point) {
 	return verb + ' ' + point + '.';
 }
 
-// Which past HSC questions a generated question repeats. `seen` lists those with the same verb as well; `similar` lists the rest.
-// Essays match on theme and topic, short answers on the learnto point.
-function pastMatches(bankKey, verb, matches) {
+// Which past HSC questions a generated question repeats. `judge` returns 'seen', 'similar' or nothing for each past question.
+function pastMatches(bankKey, judge) {
 	const found = { seen: [], similar: [] };
 	for (const past of pastPapers[bankKey] || []) {
-		if (matches(past)) {
-			found[past.verb === verb ? 'seen' : 'similar'].push(past);
+		const kind = judge(past);
+		if (kind) {
+			found[kind].push(past);
 		}
 	}
 	return found;
+}
+
+function hasPair(pairs, theme, topic) {
+	return (pairs || []).some((pair) => pair[0] === theme && pair[1] === topic);
+}
+
+function judgeEssay(past, verb, theme, topic) {
+	const essay = past.essay || {};
+	if (hasPair(essay.same, theme, topic)) {
+		return past.verb === verb ? 'seen' : 'similar';
+	}
+	return hasPair(essay.similar, theme, topic) ? 'similar' : null;
+}
+
+function judgeShort(past, point) {
+	const short = past.short || {};
+	if ((short.same || []).includes(point)) {
+		return 'seen';
+	}
+	return (short.similar || []).includes(point) ? 'similar' : null;
 }
 
 // Lists past questions by year, such as "2019 Q22, Q23, 2022 Q24". pastPapers is in year order, so the years come out in order.
@@ -797,16 +820,14 @@ function questions(syllabusKey, bankKey, type) {
 		for (const verb of essayVerbs) {
 			themes.forEach((theme, t) => {
 				topics.forEach((topic, p) => {
-					const found = pastMatches(pastBank, verb, (past) => (past.themes || []).includes(t) && (past.topics || []).includes(p));
+					const found = pastMatches(pastBank, (past) => judgeEssay(past, verb, t, p));
 					list.push({ text: essayQuestion(verb, theme, topic), ...found });
 				});
 			});
 		}
 	} else if (bank.learnto) {
 		bank.learnto.forEach((point, i) => {
-			// The verb is the first word of the point, such as "evaluate"; past verbs are capitalised.
-			const verb = capitalise(point.split(' ')[0]);
-			const found = pastMatches(pastBank, verb, (past) => (past.learnto || []).includes(i));
+			const found = pastMatches(pastBank, (past) => judgeShort(past, i));
 			list.push({ text: capitalise(point) + '.', ...found });
 		});
 	} else {

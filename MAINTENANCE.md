@@ -87,21 +87,33 @@ So:
 
 ### Past HSC questions (2009 syllabus)
 
-`pastPapers` in `generator.js`, just after `syllabuses`, records every written question in the 2015-2025 HSC papers (the Section II short answers and extended response, and both Section III questions for each option). Multiple-choice questions are left out. Each entry is tagged by bank with:
+`pastPapers` in `generator.js`, just after `syllabuses`, records every written question in the 2015-2025 HSC papers (the Section II short answers and extended response, and both Section III questions for each option). Multiple-choice questions are left out. Each entry, listed under its bank, has:
 
 - `year` and `q`, the question number as printed ("24", "27(b)").
 - `verb`, the opening verb or question form as worded in the paper. Map it to the closest form in the verb lists: "How effectively" is stored as "How effective", and a statement followed by "To what extent is this statement true" is "To what extent".
-- `themes`, `topics` and `learnto`, the indexes of the parts of the syllabus the question covers. `topics` counts the whole focus area as 0, so the first entry in the bank's `topics` list is 1. Leave out any that do not fit.
+- `essay: { same, similar }`, lists of `[theme, topic]` pairs. Topic indexes count the whole focus area as 0, so the first entry in the bank's `topics` list is 1.
+- `short: { same, similar }`, lists of indexes into the bank's `learnto`.
+- `checked`, who judged the pairings: `'subagent'` (a Claude subagent following a written rubric, October 2026) or `'person'`.
 - A comment describing the question in a few words. The question wording itself is NESA's, so it is not stored.
 
-Each generated question shows a note under it:
+**same** means "same intent": a good answer to the generated question would be a good answer to the HSC question. **similar** means real overlap, but a different focus, scope or verb demand. Each generated question shows:
 
-- **Seen in HSC 2019 Q24** (bold, in the primary colour): a past question has the same verb, and the same theme and topic (essays) or the same "students learn to" point (short answers).
-- **≈ icon** (small, muted): the same theme and topic, or the same point, with a different verb. Its text ("Similar to HSC 2019 Q24") shows on hover, or on focus in the one-question view, where the icon is a button. In the long list it is not focusable, to avoid hundreds of tab stops; screen readers still read its hidden text.
+- **Seen in HSC 2019 Q24** (bold, in the primary colour): a `same` pairing. For an essay, only when the generated verb is the HSC question's verb too; the other verbs get the icon instead. An essay pairing can only be `same` if the HSC verb is one of `essayVerbs`.
+- **≈ icon** (small, muted): a `similar` pairing, or a `same` essay pairing with another verb. Its text ("Similar to HSC 2019 Q24") shows on hover, or on focus in the one-question view, where the icon is a button. In the long list it is not focusable, to avoid hundreds of tab stops; screen readers still read its hidden text.
 
-A short-answer HSC question can still carry theme and topic tags, and an essay can carry a `learnto` tag, so both question types benefit from every paper. The 2025 syllabus has no past papers yet, so it shows no notes.
+An HSC short answer can still share an essay's theme and topic, and the reverse, so both question types benefit from every paper. The 2025 syllabus has no past papers yet, so it shows no notes.
 
-When tagging a new paper, read it alongside the bank in `generator.js` and pick the parts a marker would expect the answer to cover. Tag generously enough that the matching question shows up, but not so broadly that half the bank is marked. Then click **List all questions** for that bank to check which questions picked up the new year.
+#### Judging a new paper
+
+The October 2026 pairings were judged by nine Claude subagents, one per bank, against a written rubric. A person then spot-checked the uncertain "same intent" calls in a local review page. The tools live in `review/`, which is kept out of git because it holds the papers' wording (NESA copyright):
+
+- `review/papers/<year>.txt`, the text of each paper (extracted from the NESA PDFs with macOS PDFKit).
+- `review/build.py`, which pulls each written question's wording out of the papers into `review/past-questions.js`.
+- `review/agent/RUBRIC.md`, the rubric. `input-<bank>.json` are the subagents' inputs, `out-<bank>.json` their judgements, with a confidence and a reason for each pairing.
+- `review/agent/apply.py`, which checks the judgements and rewrites `pastPapers` from them.
+- `review/index.html`, the review page. Serve the repository folder (for example `python3 -m http.server`) and open `/review/`. It opens on the subagents' unsure "same intent" calls; change any you disagree with and Confirm. **Export** downloads `decisions.json` (every judgement, who made it and what the subagent said) and the `pastPapers` block.
+
+For a new paper: add its text to `review/papers/`, add its questions to `pastPapers` with empty pairings, run `build.py`, rebuild the inputs and run a subagent per bank with the rubric (ask Claude), then `apply.py`. Questions already `checked` don't need judging again. Then click **List all questions** to see which generated questions picked up the new year.
 
 ## Updating the verbs
 
