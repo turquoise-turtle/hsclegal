@@ -97,7 +97,7 @@ So:
 Each generated question shows a note under it:
 
 - **Seen in HSC 2019 Q24** (bold, in the primary colour): a past question has the same verb, and the same theme and topic (essays) or the same "students learn to" point (short answers).
-- **Similar to HSC 2019 Q24** (small, muted): the same theme and topic, or the same point, with a different verb.
+- **≈ icon** (small, muted): the same theme and topic, or the same point, with a different verb. Its text ("Similar to HSC 2019 Q24") shows on hover, or on focus in the one-question view, where the icon is a button. In the long list it is not focusable, to avoid hundreds of tab stops; screen readers still read its hidden text.
 
 A short-answer HSC question can still carry theme and topic tags, and an essay can carry a `learnto` tag, so both question types benefit from every paper. The 2025 syllabus has no past papers yet, so it shows no notes.
 

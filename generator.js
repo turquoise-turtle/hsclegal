@@ -820,27 +820,35 @@ function questions(syllabusKey, bankKey, type) {
 	return list;
 }
 
-// A short line saying where the question has come up before, or null if it hasn't.
-// "Seen in" (same verb) is drawn a little stronger than "Similar to" (same theme and topic, or same syllabus point).
-function pastNote(question) {
-	if (!question.seen.length && !question.similar.length) {
-		return null;
+// Marks for where a question has come up before, to append after the question text. Empty if it hasn't.
+// "Similar" (same theme and topic, or same syllabus point, but another verb) is a small icon whose text shows on hover or focus.
+// "Seen" (same verb too) is a step stronger: a visible line under the question.
+// In the one-question view the icon is a button so keyboard and touch users can open it; in the long list it is not, to save hundreds of tab stops.
+function pastNotes(question, focusable) {
+	const notes = [];
+	if (question.similar.length) {
+		const icon = document.createElement(focusable ? 'button' : 'span');
+		if (focusable) {
+			icon.type = 'button';
+		}
+		icon.className = 'similar-icon';
+		icon.dataset.tip = 'Similar to HSC ' + pastLabels(question.similar);
+		const glyph = document.createElement('span');
+		glyph.setAttribute('aria-hidden', 'true');
+		glyph.textContent = '\u2248';
+		const label = document.createElement('span');
+		label.className = 'visually-hidden';
+		label.textContent = icon.dataset.tip;
+		icon.append(glyph, label);
+		notes.push('\u00a0', icon); // a no-break space keeps the icon on the line with the last word
 	}
-	const note = document.createElement('span');
-	note.className = 'past';
 	if (question.seen.length) {
 		const seen = document.createElement('span');
 		seen.className = 'seen';
 		seen.textContent = 'Seen in HSC ' + pastLabels(question.seen);
-		note.append(seen);
+		notes.push(seen);
 	}
-	if (question.similar.length) {
-		const similar = document.createElement('span');
-		similar.className = 'similar';
-		similar.textContent = question.seen.length ? '; similar to ' + pastLabels(question.similar) : 'Similar to HSC ' + pastLabels(question.similar);
-		note.append(similar);
-	}
-	return note;
+	return notes;
 }
 
 function checkedValue(name) {
@@ -894,10 +902,7 @@ function generate() {
 	const list = questions(syllabusKey, bankKey, checkedValue('type'));
 	const question = list[Math.floor(Math.random() * list.length)];
 	showMessage(syllabuses[syllabusKey].banks[bankKey].name + ': ' + question.text);
-	const note = pastNote(question);
-	if (note) {
-		document.getElementById('status').append(' ', note);
-	}
+	document.getElementById('status').append(...pastNotes(question, true));
 }
 
 function samplespace() {
@@ -918,10 +923,7 @@ function samplespace() {
 		for (const question of list) {
 			const li = document.createElement('li');
 			li.textContent = question.text;
-			const note = pastNote(question);
-			if (note) {
-				li.append(' ', note);
-			}
+			li.append(...pastNotes(question, false));
 			ol.append(li);
 		}
 		fragment.append(heading, ol);

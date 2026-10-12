@@ -245,20 +245,65 @@
 			padding-left: 1.5em;
 		}
 
-		/* Where a question has come up in a past HSC paper. "Similar" is quiet; "Seen" (same verb too) is a step stronger, by weight and wording as well as colour. */
-		.past {
+		/* Where a question has come up in a past HSC paper. "Seen" (same verb too) is a visible line; "Similar" is only a small icon whose text shows on hover or focus. */
+		#status,
+		#output li {
+			position: relative;
+		}
+
+		.seen {
 			display: block;
 			font-size: 13px;
 			line-height: 1.4;
-		}
-
-		.past .similar {
-			color: var(--on-surface-variant);
-		}
-
-		.past .seen {
 			color: var(--primary);
 			font-weight: 600;
+		}
+
+		/* Inline in the question's sentence, so it is exempt from the 24px target size. */
+		.similar-icon {
+			display: inline-grid;
+			place-items: center;
+			width: 18px;
+			height: 18px;
+			min-height: 0;
+			margin: 0;
+			padding: 0;
+			border: 1px solid var(--outline);
+			border-radius: 50%;
+			background: transparent;
+			color: var(--on-surface-variant);
+			font: 600 12px/1 system-ui, sans-serif;
+			vertical-align: 1px;
+			cursor: help;
+		}
+
+		/* The tip spans the line it belongs to, so it never runs off a phone screen. */
+		.similar-icon:hover::after,
+		.similar-icon:focus-visible::after {
+			content: attr(data-tip);
+			position: absolute;
+			z-index: 1;
+			top: 100%;
+			left: 0;
+			max-width: 100%;
+			margin-top: 2px;
+			padding: 4px 8px;
+			border-radius: 6px;
+			background: var(--on-surface);
+			color: var(--surface);
+			font-size: 13px;
+			font-weight: normal;
+			line-height: 1.4;
+			text-align: left;
+		}
+
+		.visually-hidden {
+			position: absolute;
+			width: 1px;
+			height: 1px;
+			overflow: hidden;
+			clip-path: inset(50%);
+			white-space: nowrap;
 		}
 
 		/* NESA's terms ask for its copyright notice and an acknowledgement on any copy of its material. Kept small and quiet but still readable (4.5:1). */
