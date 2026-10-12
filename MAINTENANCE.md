@@ -96,7 +96,7 @@ So:
 - `checked`, who judged the pairings: `'subagent'` (a Claude subagent following a written rubric, October 2026) or `'person'`.
 - A comment describing the question in a few words. The question wording itself is NESA's, so it is not stored.
 
-**same** means "same intent": a good answer to the generated question would be a good answer to the HSC question. **similar** means real overlap, but a different focus, scope or verb demand. These notes only show when **Show related HSC questions** is ticked. It is off by default, and is a plain CSS switch: nothing is regenerated when it changes. Each generated question then shows:
+**same** means "same intent": a good answer to the generated question would be a good answer to the HSC question. **similar** means real overlap, but a different focus, scope or verb demand. These notes only show when **Show related HSC questions** is ticked. It is on by default, is hidden while the 2025 syllabus is selected (no past papers yet), and is a plain CSS switch: nothing is regenerated when it changes. Each generated question then shows:
 
 - **Seen in HSC 2019 Q24** (bold, in the primary colour): a `same` pairing. For an essay, only when the generated verb is the HSC question's verb too; the other verbs get the icon instead. An essay pairing can only be `same` if the HSC verb is one of `essayVerbs`.
 - **≈ icon** (small, muted): a `same` essay pairing asked with a different verb, such as the HSC's "Assess" question generated as "Evaluate". Its text ("Similar to HSC 2019 Q24") shows on hover, or on focus in the one-question view, where the icon is a button. In the long list it is not focusable, to avoid hundreds of tab stops; screen readers still read its hidden text.

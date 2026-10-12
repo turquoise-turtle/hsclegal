@@ -251,6 +251,11 @@
 			margin: 0 0 12px;
 		}
 
+		/* Only the 2009 syllabus has past papers, so the switch and its disclaimer have nothing to do for 2025. */
+		body:has(input[name="syllabus"][value="2025"]:checked) :is(label.chip, #related-note) {
+			display: none;
+		}
+
 		/* Past-paper notes, and the disclaimer about them, only show with "Show related HSC questions" ticked.
 		   display: none also takes the icons out of the tab order and hides them from screen readers. */
 		body:not(:has(#related:checked)) :is(.seen, .similar-icon, #related-note) {
@@ -357,7 +362,7 @@
 			<label><input type="radio" name="type" value="short"> Short answer</label>
 		</fieldset>
 
-		<label class="chip"><input type="checkbox" id="related"> Show related HSC questions</label>
+		<label class="chip"><input type="checkbox" id="related" checked> Show related HSC questions</label>
 
 		<fieldset>
 			<legend>Topics</legend>
