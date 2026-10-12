@@ -101,6 +101,8 @@ So:
 - **Seen in HSC 2019 Q24** (bold, in the primary colour): a `same` pairing. For an essay, only when the generated verb is the HSC question's verb too; the other verbs get the icon instead. An essay pairing can only be `same` if the HSC verb is one of `essayVerbs`.
 - **≈ icon** (small, muted): a `same` essay pairing asked with a different verb, such as the HSC's "Assess" question generated as "Evaluate". Its text ("Similar to HSC 2019 Q24") shows on hover, or on focus in the one-question view, where the icon is a button. In the long list it is not focusable, to avoid hundreds of tab stops; screen readers still read its hidden text.
 
+The footer says these notes are auto-generated and weren't checked by hand, and are only a guide to how NESA worded a similar question. Keep that disclaimer while most entries are `checked: 'subagent'`.
+
 `similar` pairings are kept in the data but not shown. The subagents found so many that the icon appeared on most essays and stopped meaning anything; they stay for future use (a "related questions" list, say) and as judging data.
 
 An HSC short answer can still share an essay's theme and topic, and the reverse, so both question types benefit from every paper. The 2025 syllabus has no past papers yet, so it shows no notes.
